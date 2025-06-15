@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -24,8 +26,9 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth', 'checkKeepAlive')->group(function () {
     Route::get('/app', [AppController::class, 'app'])->name('app');
 
-    Route::post('/get-messages', [AppController::class, 'getMessages']);
-    Route::post('/send-message', [AppController::class, 'sendMessage']);
+    Route::post('/get-messages', [MessageController::class, 'getMessages']);
+    Route::post('/send-message', [MessageController::class, 'sendMessage']);
+    Route::post('/enter-group', [GroupController::class, 'enterGroup']);
 
     Route::post('/keepAlive', [UserController::class, 'keepAlive'])->name('keepAlive');
 });

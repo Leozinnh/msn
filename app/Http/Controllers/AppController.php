@@ -17,70 +17,22 @@ class AppController extends Controller
             return redirect()->route('login');
         }
 
+        // Buscar todos os IDs dos grupos onde o usuário é membro
+        $meusGruposIds = \DB::table('group_user')
+            ->where('user_id', $usuario->id)
+            ->pluck('group_id')
+            ->toArray();
+
+        // Buscar todos os grupos
         $grupos = Group::with('owner')
             ->withCount('members')
-            // ->whereHas('members', function ($q) use ($usuario) {
-            //     $q->where('user_id', $usuario->id); // Apenas grupos onde ele é membro
-            // })
             ->get();
 
-        return view('app.index', compact('usuario', 'grupos'));
-    }
-
-    public function sendMessage(Request $request)
-    {
-        $usuario = Auth::user();
-        $message = $request->validate([
-            'chat_id' => 'nullable|integer',
-            'message' => 'required|string',
-        ]);
-
-        $msg = \App\Models\Message::create([
-            'chat_id' => $request->input('chat_id', 1), // Default chat ID
-            'author_id' => $usuario->id,
-            'content' => $message['message'],
-        ]);
-        if (!$msg) {
-            return response()->json(['success' => false, 'message' => 'Erro ao enviar a mensagem.']);
+        // Marcar cada grupo com o campo "is_member"
+        foreach ($grupos as $grupo) {
+            $grupo['is_member'] = in_array($grupo->id, $meusGruposIds);
         }
 
-        return response()->json(['success' => true, 'message' => $message['message']]);
-    }
-
-    public function getMessages(Request $request)
-    {
-        $request->validate([
-            'chat_id' => 'required|integer',
-        ]);
-
-        $chatId = $request->input('chat_id', 1);
-
-        $messages = Message::with('author')
-            ->where('chat_id', $chatId)
-            ->orderBy('created_at')
-            ->limit(100)
-            ->get();
-
-        $authUserId = Auth::id();
-
-        $messagesArray = $messages->map(function ($msg) use ($authUserId) {
-            $usuario = $msg->author;
-
-            if (!$usuario || !$usuario->name) {
-                $author = "Desconhecido";
-            } else {
-                $author = ($msg->author_id == $authUserId) ? 'Você' : ($usuario->username ?? $usuario->name);
-            }
-
-            return [
-                'id' => $msg->id,
-                'author' => $author,
-                'text' => $msg->content,
-                // 'status' => ($usuario->keepAlive && $usuario->keepAlive->diffInMinutes(now()) < 5) ? 'on' : 'off',
-                'status' => ($usuario->keepAlive) ? 'on' : 'off',
-            ];
-        });
-
-        return response()->json(['success' => true, 'messages' => $messagesArray]);
+        return view('app.index', compact('usuario', 'grupos'));
     }
 }

@@ -561,7 +561,7 @@
                                                         <span class="members">Membro's:
                                                             {{ $grupo->members_count }}</span>
                                                         <button class="join"
-                                                            onclick="joinGroup('{{ $grupo->id }}')">Entrar</button>
+                                                            onclick="joinGroup('{{ $grupo->id }}')">{{ $grupo->is_member ? 'Ver' : 'Entrar' }}</button>
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -618,7 +618,8 @@
                                                                                 `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
                                                                             historyIds.add(`msg-${msg.id}`);
-                                                                            if (msg.author != "Você" && msg.text != "nudge") newMessage();
+                                                                            if (msg.author != "Você" && msg.text != "nudge")
+                                                                                newMessage();
                                                                         }
                                                                     });
                                                                     if (fragment.children.length > 0) {
@@ -638,6 +639,21 @@
 
                                                 window.joinGroup = (groupId) => {
                                                     console.log(`Entrando no grupo ${groupId}`);
+
+                                                    fetch('/enter-group', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                            },
+                                                            body: JSON.stringify({
+                                                                group_id: groupId
+                                                            })
+                                                        })
+                                                        .then(res => res.json())
+                                                        .then(data => {})
+                                                        .catch(console.error)
+                                                        .finally(() => {});
 
                                                     // Parar o loop anterior (interrompe o fetch antigo)
                                                     stopFetchLoop();
