@@ -41,6 +41,8 @@
                     .container {
                         width: var(--width);
                         height: var(--height);
+                        max-width: calc(var(--width) + 100px);
+                        max-height: calc(var(--height) + 100px);
                         background: #D7E4F5 url(./images/ui/main-background.png) bottom 20px right no-repeat;
                         display: grid;
                         grid-template-rows: 60px 1fr 140px 24px;
@@ -51,6 +53,9 @@
                             5px 5px 10px #000c;
                         position: relative;
                         transform: translate(var(--x, 0), var(--y, 0));
+
+                        padding: 5px;
+                        resize: both
                     }
 
                     .border-window {
@@ -61,16 +66,16 @@
                         height: 100%;
                         background-image:
                             url(./images/ui/main-corner-top-left.png),
-                            url(./images/ui/main-top.png),
                             url(./images/ui/main-corner-top-right.png),
+                            url(./images/ui/main-top.png),
                             url(./images/ui/main-corner-left.png),
                             url(./images/ui/main-corner-right.png),
                             url(./images/ui/main-left.png),
                             url(./images/ui/main-right.png),
                             url(./images/ui/main-bottom2.png);
-                        background-repeat: no-repeat, repeat-x, no-repeat, no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
-                        background-position: top left, top, top right, bottom left, bottom -5px right -5px, bottom left, bottom right, bottom;
-                        
+                        background-repeat: no-repeat, no-repeat, repeat-x, no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
+                        background-position: top left, top right, top, bottom left, bottom -5px right -5px, bottom left, bottom right, bottom;
+
                         {{-- clip-path: polygon(
                             0 0,          /* Ponto 1: Top-left corner */
                             100% 0,         /* Ponto 2: Um pouco à direita no topo */
@@ -80,8 +85,7 @@
                             100% 0,       /* Ponto 5: Top-right novamente */
                             100% 100%,    /* Ponto 6: Bottom-right corner */
                             0 100%        /* Ponto 7: Bottom-left corner */
-                        ); --}}
-                        pointer-events: none;
+                        ); --}} pointer-events: none;
                     }
                 </style>
                 <div class="container">
@@ -996,5 +1000,38 @@
     </div>
 
 </body>
+<script>
+    const styleContent = `
+img {
+    user-select: none !important;
+}
+`;
+
+    function applyStyleToShadowRoot(shadowRoot) {
+        if (shadowRoot._styleInjected) return;
+        shadowRoot._styleInjected = true;
+
+        const style = document.createElement('style');
+        style.textContent = styleContent;
+        shadowRoot.appendChild(style);
+    }
+
+    function applyStyleToAllShadowRoots(root) {
+        root.querySelectorAll('*').forEach(el => {
+            if (el.shadowRoot) {
+                applyStyleToShadowRoot(el.shadowRoot);
+                applyStyleToAllShadowRoots(el.shadowRoot);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => applyStyleToAllShadowRoots(document));
+        } else {
+            setTimeout(() => applyStyleToAllShadowRoots(document), 0);
+        }
+    });
+</script>
 
 </html>
