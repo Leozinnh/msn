@@ -10,12 +10,20 @@
     <style>
         body {
             background: #2c2b5c;
+            width: 100svw;
+            height: 100svh;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         .container {
             display: flex;
             justify-content: center;
-            margin: 1em auto;
+            align-items: center;
+            width: 100svw;
+            height: 100svh;
         }
 
         img {
@@ -26,6 +34,8 @@
     <script>
         window.console = window.console || function(t) {};
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" defer></script>
 </head>
 
 <body translate="no">
@@ -43,10 +53,10 @@
                         width: var(--width);
                         height: auto;
                         /* height: var(--height); */
-                        min-width: 450px;
-                        min-height: 338px;
+                        min-width: 467px;
+                        min-height: 425px;
                         max-width: 470px;
-                        max-height: calc(var(--height) + 100px);
+                        max-height: calc(var(--height) + 50px);
                         background: #D7E4F5 url(./images/ui/main-background.png) bottom right no-repeat;
                         display: grid;
                         grid-template-rows: 60px 1fr 140px 24px;
@@ -861,8 +871,9 @@
                                                                 emojiContainer.style.border = '1px solid #586170';
                                                                 emojiContainer.style.borderRadius = '6px';
                                                                 emojiContainer.style.zIndex = 1000;
-                                                                emojiContainer.style.top = '100%'; // aparece abaixo do container
+                                                                emojiContainer.style.top = '100%';
                                                                 emojiContainer.style.left = '-75px';
+                                                                emojiContainer.style.boxShadow = '-1px -1px 3px #0000001f, 3px 3px 6px #00000038';
 
                                                                 container.appendChild(emojiContainer);
 
@@ -981,7 +992,8 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container" onclick="sendNudge(event);" title="Cutucar">
+                                                        <div class="container" onclick="sendNudge(event);"
+                                                            title="Cutucar">
                                                             <img src="./images/ui/nudge.png" alt="nudge">
                                                         </div>
                                                         <script>
@@ -1204,6 +1216,24 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        $(function() {
+            const windowWidth = $(window).width();
+            const windowHeight = $(window).height();
+            const el = $("msn-messenger-window");
+
+            const elWidth = el.outerWidth();
+            const elHeight = el.outerHeight();
+
+            el.draggable({
+                containment: [
+                    0, // min X
+                    0, // min Y
+                    windowWidth - elWidth, // max X
+                    windowHeight - elHeight // max Y
+                ]
+            });
+        });
+
         window.newMessage = () => {
             const audio = new Audio('./sounds/new_message.mp3');
             audio.play().catch(error => {
@@ -1211,13 +1241,12 @@
             });
         }
         window.nudge = () => {
-            window.newMessage = () => {
-                const audio = new Audio('./sounds/nudge.mp3');
-                audio.play().catch(error => {
-                    console.error('Erro ao tocar o som nudge:', error);
-                });
-            }
+            const audio = new Audio('./sounds/nudge.mp3');
+            audio.play().catch(error => {
+                console.error('Erro ao tocar o som nudge:', error);
+            });
         }
+
         const styleContent = `
 img {
     user-select: none !important;

@@ -15,12 +15,20 @@
 
         body {
             background: #2c2b5c;
+            width: 100svw;
+            height: 100svh;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         .container {
             display: flex;
             justify-content: center;
-            margin: 1em auto;
+            align-items: center;
+            width: 100svw;
+            height: 100svh;
         }
 
         img {
@@ -490,8 +498,7 @@
 
                                                 <div class="photo-radio-group">
                                                     <label>
-                                                        <input type="radio" name="avatar" value="msn.png"
-                                                            checked>
+                                                        <input type="radio" name="avatar" value="msn.png" checked>
                                                         <img src="./images/ui/msn.png" alt="Avatar 1">
                                                     </label>
 
@@ -509,8 +516,9 @@
 
                                                 <div class="form-control">
                                                     <label for="name">Nome:</label>
-                                                    <input type="text" id="name" required name="name" minlength="3"
-                                                        placeholder="Digite o seu nome" value="{{ old('name') }}">
+                                                    <input type="text" id="name" required name="name"
+                                                        minlength="3" placeholder="Digite o seu nome"
+                                                        value="{{ old('name') }}">
                                                 </div>
 
                                                 <div class="form-control">
