@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AppController;
 
 
 Route::get('/', function () {
@@ -21,7 +22,8 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/app', function () {
-        return view('app.index');
-    });
+    Route::get('/app', [AppController::class, 'app'])->name('app');
+
+    Route::post('/get-messages', [AppController::class, 'getMessages']);
+    Route::post('/send-message', [AppController::class, 'sendMessage']);
 });

@@ -35,16 +35,19 @@
                 <style>
                     :host {
                         --width: 475px;
-                        --height: 400px;
+                        --height: 350px;
                         --border-radius: 6px;
                     }
 
                     .container {
                         width: var(--width);
-                        height: var(--height);
-                        max-width: calc(var(--width) + 100px);
+                        height: auto;
+                        /* height: var(--height); */
+                        min-width: 450px;
+                        min-height: 338px;
+                        max-width: 470px;
                         max-height: calc(var(--height) + 100px);
-                        background: #D7E4F5 url(./images/ui/main-background.png) bottom 20px right no-repeat;
+                        background: #D7E4F5 url(./images/ui/main-background.png) bottom right no-repeat;
                         display: grid;
                         grid-template-rows: 60px 1fr 140px 24px;
                         border-radius: var(--border-radius);
@@ -406,14 +409,14 @@
                                     <template shadowrootmode="open">
                                         <style>
                                             .container {
-                                                display: grid;
-                                                justify-content: center;
-                                                grid-template-columns: 1fr;
-                                                grid-template-rows: 28px 1fr;
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: flex-start;
                                                 font-family: Verdana;
                                                 font-size: 10px;
                                                 width: 97%;
                                                 height: 100%;
+                                                background: #fff;
                                                 border: 1px solid #586170;
                                                 border-radius: 8px 8px 0 0;
                                                 margin: 2px 1px;
@@ -433,14 +436,95 @@
                                             }
 
                                             .history {
+                                                position: relative;
+                                                height: auto;
+                                                max-height: 176px;
                                                 background: #fff;
+                                                padding: 2px;
+                                                word-wrap: break-word;
+                                                word-break: break-all;
+                                                overflow-y: auto;
+                                            }
+
+                                            .history p {
+                                                margin: 0;
                                             }
                                         </style>
                                         <div class="container">
-                                            <div class="subject">To: <strong>Leozin (leonardoaf6557@icloud.com)</strong>
+                                            <div class="subject">To: <strong>{{ $usuario->name }}
+                                                    ({{ $usuario->email }})</strong>
                                             </div>
-                                            <div class="history"></div>
+                                            <div class="history" id="history">
+                                            </div>
                                         </div>
+
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', () => {
+                                                const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
+                                                const remoteUserEl = windowEl.querySelector('msn-messenger-remote-user');
+                                                if (!remoteUserEl) return console.error('msn-messenger-remote-user não encontrado');
+
+                                                const remoteUserShadow = remoteUserEl.shadowRoot;
+                                                if (!remoteUserShadow) return console.error('shadowRoot do msn-messenger-remote-user é null');
+
+                                                const historyChatEl = remoteUserShadow.querySelector('msn-messenger-history-chat');
+                                                if (!historyChatEl) return console.error('msn-messenger-history-chat não encontrado');
+
+                                                const tryInit = () => {
+                                                    const historyChatShadow = historyChatEl.shadowRoot;
+                                                    if (!historyChatShadow) {
+                                                        setTimeout(tryInit, 100);
+                                                        return;
+                                                    }
+
+                                                    const historyEl = historyChatShadow.querySelector('#history');
+                                                    if (!historyEl) return console.error('Elemento #history não encontrado');
+
+                                                    const historyIds = new Set();
+                                                    const chatId = 1;
+
+                                                    function fetchMessages() {
+                                                        fetch('/get-messages', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    chat: chatId
+                                                                })
+                                                            })
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                if (data.success) {
+                                                                    const fragment = document.createDocumentFragment();
+                                                                    data.messages.forEach(msg => {
+                                                                        if (!historyIds.has(`msg-${msg.id}`)) {
+                                                                            const p = document.createElement('p');
+                                                                            p.id = `msg-${msg.id}`;
+                                                                            p.innerHTML =
+                                                                                `<b>${msg.author}</b>: <span>${msg.text}</span>`;
+                                                                            fragment.appendChild(p);
+                                                                            historyIds.add(`msg-${msg.id}`);
+                                                                        }
+                                                                    });
+                                                                    if (fragment.children.length > 0) {
+                                                                        historyEl.appendChild(fragment);
+                                                                        historyEl.scrollTop = historyEl.scrollHeight;
+                                                                    }
+                                                                }
+                                                            })
+                                                            .catch(console.error)
+                                                            .finally(() => setTimeout(fetchMessages, 1000));
+                                                    }
+
+                                                    fetchMessages();
+                                                };
+
+                                                tryInit();
+                                            });
+                                        </script>
+
                                     </template>
                                 </msn-messenger-history-chat>
                                 <msn-messenger-avatar image="msn">
@@ -535,18 +619,34 @@
                                             }
 
                                             .chat {
+                                                position: relative;
+                                                width: 100%;
+                                                max-width: 318px;
                                                 display: flex;
-                                                justify-content: flex-end;
+                                                justify-content: space-between;
+                                                align-items: center;
                                                 margin: 3px;
                                             }
 
-                                            .chat .buttons {
-                                                display: flex;
-                                                flex-direction: column;
-                                                gap: 3px 0;
+                                            .chat #chat {
+                                                position: relative;
+                                                width: 100%;
+                                                max-width: 300px;
+                                                max-height: 75px;
+                                                height: 100%;
+                                                word-wrap: break-word;
+                                                word-break: break-all;
+                                                border-radius: 5px;
+                                                font-family: Verdana;
+                                                font-size: 10px;
+                                                color: #000;
+                                                background: #FDFDFF;
+                                                overflow-y: auto;
+                                                outline: none;
                                             }
 
                                             .normal {
+                                                position: relative;
                                                 border: 1px solid #93989C;
                                                 background: #FBFBFB;
                                                 box-shadow: -4px -4px 4px #C0C9E0 inset;
@@ -557,14 +657,15 @@
                                                 font-weight: bold;
                                                 font-size: 11px;
                                                 color: #969C9A;
+                                                cursor: pointer;
+                                            }
+
+                                            .normal:is(:hover, :active) {
+                                                background: #F0F0F0;
                                             }
 
                                             .normal span {
                                                 text-decoration: underline;
-                                            }
-
-                                            .normal.small {
-                                                height: 25px;
                                             }
                                         </style>
                                         <div class="container">
@@ -830,9 +931,9 @@
                                                 </simple-button>
                                             </div>
                                             <div class="chat">
-                                                <div class="buttons">
-                                                    <button class="normal"><span>S</span>end</button>
-                                                </div>
+                                                <span id="chat" contenteditable="true"></span>
+                                                <button class="normal"
+                                                    onclick="sendMessage(event);"><span>S</span>end</button>
                                             </div>
                                             <div class="tabs">
                                                 <tab-button image="paint">
@@ -899,6 +1000,38 @@
                                                 </tab-button>
                                             </div>
                                         </div>
+
+                                        <script>
+                                            function sendMessage(event) {
+                                                const chatElement = event.target.closest('.chat').querySelector('#chat');
+                                                const message = chatElement.textContent.trim();
+
+                                                if (message) {
+                                                    console.log('Sending message:', message);
+
+                                                    fetch('/send-message', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                                            },
+                                                            body: JSON.stringify({
+                                                                message: message
+                                                            })
+                                                        })
+                                                        .then(response => response.json())
+                                                        .then(data => {
+                                                            console.log('Success:', data);
+                                                            chatElement.textContent = '';
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error:', error);
+                                                        });
+                                                } else {
+                                                    alert('Digite uma mensagem antes de enviar.');
+                                                }
+                                            }
+                                        </script>
                                     </template>
                                 </msn-messenger-chat>
                                 <msn-messenger-avatar image="duck">
@@ -939,16 +1072,18 @@
                                             }
                                         </style>
                                         <div class="container">
-                                            <img class="picture" src="./images/ui/duck.png" alt="Avatar">
+                                            <img class="picture" src="./images/ui/{{ $usuario->foto }}"
+                                                alt="Avatar">
                                             <button class="down">⯆</button>
                                             <img class="expand" src="./images/ui/expand-left.png" alt="expand arrow">
                                         </div>
                                     </template>
                                 </msn-messenger-avatar>
                             </div>
+
                         </template>
                     </msn-messenger-local-user>
-                    <msn-messenger-statusbar>
+                    <msn-messenger-statusbar style="position: absolute;bottom: 4px;width: 100%;padding-left: 3px;">
                         <template shadowrootmode="open">
                             <style>
                                 .container {
