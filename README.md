@@ -88,7 +88,7 @@ Acesse: http://localhost:8000
 
 ## ✨ Próximas melhorias (Roadmap)
 
--   ✅ Opçao de trocar senha (Esqueceu sua senha?)
+-   ✅ Opção de trocar senha (Esqueceu sua senha?)
 -   ✅ Sistema de envio de arquivos (imagens e documentos)
 -   ✅ Áudio de notificação estilo MSN
 -   ✅ Animações de "Nudge / Chamar atenção"
