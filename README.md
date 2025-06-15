@@ -65,20 +65,26 @@ default character set utf8
 default collate utf8_general_ci;
 ```
 
-5. **Execute as migrations:**
+5. **Crie uma chave de aplicaçao:**
+
+```bash
+php artisan key:generate
+```
+
+6. **Execute as migrations:**
 
 ```bash
 php artisan migrate
 ```
 
-6. **(Opcional) Compile os assets:**
+7. **(Opcional) Compile os assets:**
 
 ```bash
 npm install
 npm run dev
 ```
 
-7. **Inicie o servidor local:**
+8. **Inicie o servidor local:**
 
 ```bash
 php artisan serve
