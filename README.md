@@ -14,6 +14,7 @@ Aqui você pode **se registrar**, **entrar em grupos existentes**, **sons cláss
 -   Emojis, status e interface com estilo retrô MSN
 -   Histórico de mensagens
 -   Sons clássicos
+-   Usuário's Online/Offlline
 -   Atualizações futuras: envio de imagens, status de presença, entre outros
 
 ---
@@ -85,7 +86,7 @@ php artisan serve
 
 Acesse: http://localhost:8000
 
-8. **Crie a cron para deslogar usuários offline**
+8. **(Opcional) Crie a cron para deslogar usuários offline**
 
 ```bash
 * * * * * cd /var/ww/msn && php artisan schedule:run >> /dev/null 2>&1
