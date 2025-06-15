@@ -113,7 +113,7 @@
           .container {
             width: var(--width);
             height: var(--height);
-            background: #D7E4F5 url(./index_files/main-background.png) bottom 20px right no-repeat;
+            background: #D7E4F5 url(./images/ui/main-background.png) bottom 20px right no-repeat;
             display: grid;
             grid-template-rows: 60px 1fr 140px 24px;
             border-radius: var(--border-radius);
@@ -132,11 +132,11 @@
             width: 100%;
             height: 100%;
             background-image:
-              url(./index_files/main-corner-left.png),
-              url(./index_files/main-corner-right.png),
-              url(./index_files/main-left.png),
-              url(./index_files/main-right.png),
-              url(./index_files/main-bottom.png);
+              url(./images/ui/main-corner-left.png),
+              url(./images/ui/main-corner-right.png),
+              url(./images/ui/main-left.png),
+              url(./images/ui/main-right.png),
+              url(./images/ui/main-bottom.png);
             background-repeat: no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
             background-position: bottom left, bottom -1px right, bottom left, bottom right, bottom;
             clip-path: polygon(0 14.5%, 100% 5%, 100% 100%, 0 100%);
@@ -160,7 +160,7 @@
                   grid-template-columns: 40px 56px 44px 40px 54px 44px;
                   justify-content: flex-end;
                   align-items: center;
-                  background: url(./index_files/toolbar-background.png) repeat;
+                  background: url(./images/ui/toolbar-background.png) repeat;
                   background-size: contain;
                 }
 
@@ -171,22 +171,22 @@
                 }
 
                 .toolbar-small-container .left {
-                  background: url(./index_files/small-toolbar-left-background.png) no-repeat;
+                  background: url(./images/ui/small-toolbar-left-background.png) no-repeat;
                 }
 
                 .toolbar-small-container .center {
                   background:
-                    url(./index_files/msn-logo.png) top left 4px,
-                    url(./index_files/small-toolbar-center-background.png);
+                    url(./images/ui/msn-logo.png) top left 4px,
+                    url(./images/ui/small-toolbar-center-background.png);
                   background-repeat: no-repeat, repeat-x;
                 }
 
                 .toolbar-small-container .right {
-                  background: url(./index_files/small-toolbar-right-background.png) no-repeat;
+                  background: url(./images/ui/small-toolbar-right-background.png) no-repeat;
                 }
 
                 .toolbar-small-container .end {
-                  background: url(./index_files/small-toolbar-end-background.png) repeat;
+                  background: url(./images/ui/small-toolbar-end-background.png) repeat;
                 }
 
                 .center .buttons {
@@ -217,7 +217,7 @@
                           display: flex;
                           justify-content: center;
                           align-items: center;
-                          background: url(./index_files/small-circle-button.png) no-repeat;
+                          background: url(./images/ui/small-circle-button.png) no-repeat;
                           background-size: cover;
                         }
 
@@ -395,7 +395,7 @@
                               display: flex;
                               justify-content: center;
                               align-items: center;
-                              background: url(./index_files/small-circle-button.png) no-repeat;
+                              background: url(./images/ui/small-circle-button.png) no-repeat;
                               background-size: cover;
                             }
 
@@ -417,7 +417,7 @@
                               display: flex;
                               justify-content: center;
                               align-items: center;
-                              background: url(./index_files/small-circle-button.png) no-repeat;
+                              background: url(./images/ui/small-circle-button.png) no-repeat;
                               background-size: cover;
                             }
 
@@ -1058,7 +1058,7 @@
 
       connectedCallback() {
         var _this$getAttribute;
-        this.image = "./index_files/" + this.getAttribute("image") + ".png";
+        this.image = "./images/ui/" + this.getAttribute("image") + ".png";
         this.text = (_this$getAttribute = this.getAttribute("text")) !== null && _this$getAttribute !== void 0 ? _this$getAttribute : "Sin texto";
         this.bind = this.getAttribute("bind");
         this.label = this.text.replace(this.bind, `<span>${this.bind}</span>`);
@@ -1120,7 +1120,7 @@
 
       connectedCallback() {
         var _this$getAttribute2;
-        this.image = "./index_files/" + this.getAttribute("image") + ".png";
+        this.image = "./images/ui/" + this.getAttribute("image") + ".png";
         this.text = this.getAttribute("image");
         this.label = (_this$getAttribute2 = this.getAttribute("label")) !== null && _this$getAttribute2 !== void 0 ? _this$getAttribute2 : "";
         this.arrowButton = this.hasAttribute("arrow") ? "<button>⯆</button>" : "";
@@ -1174,7 +1174,7 @@
       }
 
       connectedCallback() {
-        this.image = "./index_files/" + this.getAttribute("image") + ".png";
+        this.image = "./images/ui/" + this.getAttribute("image") + ".png";
         this.text = this.getAttribute("image");
         this.render();
       }
@@ -1242,9 +1242,9 @@
         this.shadowRoot.innerHTML = /* html */`
     <style>${MSNMessengerAvatar.styles}</style>
     <div class="container">
-      <img class="picture" src="./index_files/${this.image}.png" alt="Avatar">
+      <img class="picture" src="./images/ui/${this.image}.png" alt="Avatar">
       <button class="down">⯆</button>
-      <img class="expand" src="./index_files/expand-left.png" alt="expand arrow">
+      <img class="expand" src="./images/ui/expand-left.png" alt="expand arrow">
     </div>
     `;
       }
@@ -1550,7 +1550,7 @@
         grid-template-columns: 40px 56px 44px 40px 54px 44px;
         justify-content: flex-end;
         align-items: center;
-        background: url(./index_files/toolbar-background.png) repeat;
+        background: url(./images/ui/toolbar-background.png) repeat;
         background-size: contain;
       }
       .toolbar-small-container {
@@ -1559,19 +1559,19 @@
         height: 100%;
       }
       .toolbar-small-container .left {
-        background: url(./index_files/small-toolbar-left-background.png) no-repeat;
+        background: url(./images/ui/small-toolbar-left-background.png) no-repeat;
       }
       .toolbar-small-container .center {
         background:
-          url(./index_files/msn-logo.png) top left 4px,
-          url(./index_files/small-toolbar-center-background.png);
+          url(./images/ui/msn-logo.png) top left 4px,
+          url(./images/ui/small-toolbar-center-background.png);
         background-repeat: no-repeat, repeat-x;
       }
       .toolbar-small-container .right {
-        background: url(./index_files/small-toolbar-right-background.png) no-repeat;
+        background: url(./images/ui/small-toolbar-right-background.png) no-repeat;
       }
       .toolbar-small-container .end {
-        background: url(./index_files/small-toolbar-end-background.png) repeat;
+        background: url(./images/ui/small-toolbar-end-background.png) repeat;
       }
       .center .buttons {
         display: flex;
@@ -1640,7 +1640,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: url(./index_files/small-circle-button.png) no-repeat;
+        background: url(./images/ui/small-circle-button.png) no-repeat;
         background-size: cover;
       }
       .container img {
@@ -1653,7 +1653,7 @@
       connectedCallback() {
         var _this$getAttribute4;
         this.text = (_this$getAttribute4 = this.getAttribute("image")) !== null && _this$getAttribute4 !== void 0 ? _this$getAttribute4 : "notext";
-        this.image = "./index_files/small-" + this.text + ".png";
+        this.image = "./images/ui/small-" + this.text + ".png";
         this.render();
       }
 
@@ -1685,7 +1685,7 @@
       .container {
         width: var(--width);
         height: var(--height);
-        background: #D7E4F5 url(./index_files/main-background.png) bottom 20px right no-repeat;
+        background: #D7E4F5 url(./images/ui/main-background.png) bottom 20px right no-repeat;
         display: grid;
         grid-template-rows: 60px 1fr 140px 24px;
         border-radius: var(--border-radius);
@@ -1703,11 +1703,11 @@
           width: 100%;
           height: 100%;
           background-image:
-            url(./index_files/main-corner-left.png),
-            url(./index_files/main-corner-right.png),
-            url(./index_files/main-left.png),
-            url(./index_files/main-right.png),
-            url(./index_files/main-bottom.png);
+            url(./images/ui/main-corner-left.png),
+            url(./images/ui/main-corner-right.png),
+            url(./images/ui/main-left.png),
+            url(./images/ui/main-right.png),
+            url(./images/ui/main-bottom.png);
           background-repeat: no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
           background-position: bottom left, bottom -1px right, bottom left, bottom right, bottom;
           clip-path: polygon(0 14.5%, 100% 5%, 100% 100%, 0 100%);

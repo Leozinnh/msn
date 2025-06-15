@@ -81,7 +81,6 @@
                             100% 100%,    /* Ponto 6: Bottom-right corner */
                             0 100%        /* Ponto 7: Bottom-left corner */
                         ); --}}
-
                         pointer-events: none;
                     }
                 </style>
@@ -100,23 +99,37 @@
 
                                 .toolbar-container {
                                     display: grid;
-                                    grid-template-columns: 40px;
+                                    grid-template-columns: 40px 56px 44px 40px 54px 44px;
                                     justify-content: flex-end;
                                     align-items: center;
+                                    background: url(./images/ui/toolbar-background.png) repeat;
+                                    background-size: contain;
                                 }
 
                                 .toolbar-small-container {
                                     display: grid;
-                                    grid-template-columns: 50px;
+                                    grid-template-columns: 50px 50px 37px 28px;
                                     height: 100%;
+                                }
+
+                                .toolbar-small-container .left {
+                                    background: url(./images/ui/small-toolbar-left-background.png) no-repeat;
                                 }
 
                                 .toolbar-small-container .center {
                                     background:
-                                        url(./images/ui/msn-logo.png) top left 4px;
+                                        url(./images/ui/msn-logo.png) top left 4px,
+                                        url(./images/ui/small-toolbar-center-background.png);
                                     background-repeat: no-repeat, repeat-x;
                                 }
 
+                                .toolbar-small-container .right {
+                                    background: url(./images/ui/small-toolbar-right-background.png) no-repeat;
+                                }
+
+                                .toolbar-small-container .end {
+                                    background: url(./images/ui/small-toolbar-end-background.png) repeat;
+                                }
 
                                 .center .buttons {
                                     display: flex;
@@ -161,8 +174,171 @@
                                             </div>
                                         </template>
                                     </image-circular-button>
+                                    <image-button image="invite" text="Invite" bind="I">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/invite.png" alt="Invite">
+                                                <div class="text"><span>I</span>nvite</div>
+                                            </div>
+                                        </template>
+                                    </image-button>
+                                    <image-button image="send" text="Send Files" bind="l">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/send.png" alt="Send Files">
+                                                <div class="text">Send Fi<span>l</span>es</div>
+                                            </div>
+                                        </template>
+                                    </image-button>
+                                    <image-button image="video" text="Video" bind="o">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/video.png" alt="Video">
+                                                <div class="text">Vide<span>o</span></div>
+                                            </div>
+                                        </template>
+                                    </image-button>
+                                    <image-button image="voice" text="Voice" bind="c">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/voice.png" alt="Voice">
+                                                <div class="text">Voi<span>c</span>e</div>
+                                            </div>
+                                        </template>
+                                    </image-button>
+                                    <image-button image="activities" text="Activities" bind="v">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/activities.png" alt="Activities">
+                                                <div class="text">Acti<span>v</span>ities</div>
+                                            </div>
+                                        </template>
+                                    </image-button>
+                                    <image-button image="games" text="Games" bind="G">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container">
+                                                <img src="./images/ui/games.png" alt="Games">
+                                                <div class="text"><span>G</span>ames</div>
+                                            </div>
+                                        </template>
+                                    </image-button>
                                 </div>
                                 <div class="toolbar-small-container">
+                                    <div class="left"></div>
                                     <div class="center">
                                         <div class="buttons">
                                             <image-circular-button image="block">
@@ -183,10 +359,38 @@
                                                             height: var(--image-size, 11px);
                                                         }
                                                     </style>
+                                                    <div class="container">
+                                                        <img src="./images/ui/small-block.png" alt="block">
+                                                    </div>
+                                                </template>
+                                            </image-circular-button>
+                                            <image-circular-button image="paint">
+                                                <template shadowrootmode="open">
+                                                    <style>
+                                                        .container {
+                                                            width: var(--size, 16px);
+                                                            height: var(--size, 16px);
+                                                            display: flex;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            background: url(./images/ui/small-circle-button.png) no-repeat;
+                                                            background-size: cover;
+                                                        }
+
+                                                        .container img {
+                                                            width: var(--image-size, 11px);
+                                                            height: var(--image-size, 11px);
+                                                        }
+                                                    </style>
+                                                    <div class="container">
+                                                        <img src="./images/ui/small-paint.png" alt="paint">
+                                                    </div>
                                                 </template>
                                             </image-circular-button>
                                         </div>
                                     </div>
+                                    <div class="right"></div>
+                                    <div class="end"></div>
                                 </div>
                             </div>
                         </template>
