@@ -85,6 +85,12 @@ php artisan serve
 
 Acesse: http://localhost:8000
 
+8. **Crie a cron para deslogar usuários offline**
+
+```bash
+* * * * * cd /var/ww/msn && php artisan schedule:run >> /dev/null 2>&1
+```
+
 ---
 
 ## ✨ Próximas melhorias (Roadmap)
