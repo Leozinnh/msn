@@ -502,10 +502,22 @@
                                                                         if (!historyIds.has(`msg-${msg.id}`)) {
                                                                             const p = document.createElement('p');
                                                                             p.id = `msg-${msg.id}`;
+
+                                                                            if (msg.text === "nudge") {
+                                                                                const isSelf = (msg.author === "Você");
+                                                                                if (!isSelf) {
+                                                                                    nudge();
+                                                                                }
+                                                                                msg.text = isSelf ?
+                                                                                    "<mark>Você alertou o usuário com um cutucão!</mark>" :
+                                                                                    "<mark>Alertou você com um cutucão!</mark>";
+                                                                            }
+
                                                                             p.innerHTML =
                                                                                 `<b>${msg.author}</b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
                                                                             historyIds.add(`msg-${msg.id}`);
+                                                                            if (msg.author != "Você") newMessage();
                                                                         }
                                                                     });
                                                                     if (fragment.children.length > 0) {
@@ -565,7 +577,7 @@
                                             }
                                         </style>
                                         <div class="container">
-                                            <img class="picture" src="./images/ui/msn.png" alt="Avatar">
+                                            <img class="picture" src="./images/ui/persons.jpeg" alt="Foto do Grupo">
                                             <button class="down">⯆</button>
                                             <img class="expand" src="./images/ui/expand-left.png" alt="expand arrow">
                                         </div>
@@ -684,15 +696,6 @@
                                                                 height: 16px;
                                                             }
 
-                                                            .container span:not(:empty) {
-                                                                font-family: Verdana;
-                                                                font-size: 10px;
-                                                                color: #444;
-                                                                display: inline-block;
-                                                                width: 50px;
-                                                                padding-left: 3px;
-                                                            }
-
                                                             .container button {
                                                                 border: 0;
                                                                 background: transparent;
@@ -700,10 +703,8 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/letter.png" alt="letter">
-                                                            <span></span>
-
                                                         </div>
                                                     </template>
                                                 </simple-button>
@@ -721,15 +722,6 @@
                                                                 height: 16px;
                                                             }
 
-                                                            .container span:not(:empty) {
-                                                                font-family: Verdana;
-                                                                font-size: 10px;
-                                                                color: #444;
-                                                                display: inline-block;
-                                                                width: 50px;
-                                                                padding-left: 3px;
-                                                            }
-
                                                             .container button {
                                                                 border: 0;
                                                                 background: transparent;
@@ -737,9 +729,8 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/happy.png" alt="happy">
-                                                            <span></span>
                                                             <button>⯆</button>
                                                         </div>
                                                     </template>
@@ -774,10 +765,9 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/voice-clip.png" alt="voice-clip">
                                                             <span>Voice clip</span>
-
                                                         </div>
                                                     </template>
                                                 </simple-button>
@@ -804,6 +794,21 @@
                                                                 padding-left: 3px;
                                                             }
 
+                                                            .container span:not(:empty).emoji {
+                                                                position: relative;
+                                                                width: 15px;
+                                                                height: 15px;
+                                                                padding: 0;
+                                                                margin: 1px;
+                                                                cursor: pointer;
+                                                                transform: scale(1.3);
+                                                                transition: all 0.1s ease;
+                                                            }
+
+                                                            .container span:not(:empty).emoji:is(:hover, :active) {
+                                                                transform: scale(1.5);
+                                                            }
+
                                                             .container button {
                                                                 border: 0;
                                                                 background: transparent;
@@ -811,11 +816,93 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" onclick="viewEmojis(event);"
+                                                            style="position: relative;">
                                                             <img src="./images/ui/wink.png" alt="wink">
                                                             <span></span>
                                                             <button>⯆</button>
                                                         </div>
+
+                                                        <script>
+                                                            function viewEmojis(event) {
+                                                                const container = event.target.closest('.container');
+                                                                if (!container) {
+                                                                    return;
+                                                                }
+                                                                if (container.querySelector('.emoji-container')) {
+                                                                    // Já existe, evita criar duplicado
+                                                                    return;
+                                                                }
+                                                                const span = container.querySelector('span');
+
+                                                                const emojis = [
+                                                                    '😊', '😂', '😍', '😢', '😡', '👍', '👎', '👏', '🙏', '🤔',
+                                                                    '😎', '🥳', '😭', '😴', '🤯', '😱', '🤩', '🤗', '😇', '😈',
+                                                                    '💀', '👻', '🎃', '🔥', '🌟', '💥', '💫', '✨', '❤️', '💔',
+                                                                    '💕', '💖', '💗', '💙', '💚', '💛', '💜', '🖤', '🤍', '🤎',
+                                                                    '🍕', '🍔', '🍟', '🍩', '🍪', '🍫', '🍿', '🍎', '🍇', '🍓',
+                                                                    '🍉', '🍌', '🍒', '🥑', '🥦', '🥕', '🍗', '🍖', '🍤', '🍱',
+                                                                    '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓',
+                                                                    '🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚜',
+                                                                    '🌍', '🌎', '🌏', '🌕', '🌙', '⭐', '☀️', '🌈', '🌧️', '❄️',
+                                                                    '🎉', '🎊', '🎈', '🎂', '🍰', '🥂', '🍻', '☕', '🍺', '🍷'
+                                                                ];
+                                                                const emojiList = emojis.map(emoji => `<span class="emoji">${emoji}</span>`).join('');
+                                                                const emojiContainer = document.createElement('div');
+                                                                emojiContainer.className = 'emoji-container';
+                                                                emojiContainer.innerHTML = emojiList;
+                                                                emojiContainer.style.position = 'absolute';
+                                                                emojiContainer.style.display = 'flex';
+                                                                emojiContainer.style.flexWrap = 'wrap';
+                                                                emojiContainer.style.width = 'max-content';
+                                                                emojiContainer.style.maxWidth = '273px';
+                                                                emojiContainer.style.background = 'linear-gradient(#D8E8F7, #F5F2F9, #D8E8F7)';
+                                                                emojiContainer.style.padding = '2px';
+                                                                emojiContainer.style.border = '1px solid #586170';
+                                                                emojiContainer.style.borderRadius = '6px';
+                                                                emojiContainer.style.zIndex = 1000;
+                                                                emojiContainer.style.top = '100%'; // aparece abaixo do container
+                                                                emojiContainer.style.left = '-75px';
+
+                                                                container.appendChild(emojiContainer);
+
+                                                                emojiContainer.addEventListener('click', (e) => {
+                                                                    if (e.target.classList.contains('emoji')) {
+                                                                        // span.textContent += e.target.textContent;
+
+                                                                        const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
+                                                                        const remoteUserEl = windowEl.querySelector('msn-messenger-local-user');
+                                                                        if (!remoteUserEl) return console.error('msn-messenger-local-user não encontrado');
+
+                                                                        const localUserShadow = remoteUserEl.shadowRoot;
+                                                                        if (!localUserShadow) return console.error('shadowRoot do msn-messenger-local-user é null');
+
+                                                                        const messageChatEl = localUserShadow.querySelector('msn-messenger-chat');
+                                                                        if (!messageChatEl) return console.error('msn-messenger-chat não encontrado');
+
+                                                                        const chatEl = messageChatEl.shadowRoot.querySelector('.chat #chat');
+                                                                        if (!chatEl) return console.error('Elemento #chat não encontrado');
+                                                                        chatEl.textContent += e.target.textContent;
+
+                                                                        container.removeChild(emojiContainer);
+                                                                    }
+                                                                });
+
+                                                                // Delay para evitar que o clique atual remova imediatamente
+                                                                setTimeout(() => {
+                                                                    document.addEventListener('click', (e) => {
+                                                                        if (!container.contains(e.target)) {
+                                                                            if (container.contains(emojiContainer)) {
+                                                                                container.removeChild(emojiContainer);
+                                                                            }
+                                                                        }
+                                                                    }, {
+                                                                        once: true
+                                                                    });
+                                                                }, 0);
+                                                            }
+                                                        </script>
+
                                                     </template>
                                                 </simple-button>
                                                 <simple-button image="mountain" arrow="">
@@ -832,15 +919,6 @@
                                                                 height: 16px;
                                                             }
 
-                                                            .container span:not(:empty) {
-                                                                font-family: Verdana;
-                                                                font-size: 10px;
-                                                                color: #444;
-                                                                display: inline-block;
-                                                                width: 50px;
-                                                                padding-left: 3px;
-                                                            }
-
                                                             .container button {
                                                                 border: 0;
                                                                 background: transparent;
@@ -848,9 +926,8 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/mountain.png" alt="mountain">
-                                                            <span></span>
                                                             <button>⯆</button>
                                                         </div>
                                                     </template>
@@ -869,15 +946,6 @@
                                                                 height: 16px;
                                                             }
 
-                                                            .container span:not(:empty) {
-                                                                font-family: Verdana;
-                                                                font-size: 10px;
-                                                                color: #444;
-                                                                display: inline-block;
-                                                                width: 50px;
-                                                                padding-left: 3px;
-                                                            }
-
                                                             .container button {
                                                                 border: 0;
                                                                 background: transparent;
@@ -885,9 +953,8 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/gift.png" alt="gift">
-                                                            <span></span>
                                                             <button>⯆</button>
                                                         </div>
                                                     </template>
@@ -904,15 +971,7 @@
 
                                                             .container img {
                                                                 height: 16px;
-                                                            }
-
-                                                            .container span:not(:empty) {
-                                                                font-family: Verdana;
-                                                                font-size: 10px;
-                                                                color: #444;
-                                                                display: inline-block;
-                                                                width: 50px;
-                                                                padding-left: 3px;
+                                                                cursor: pointer;
                                                             }
 
                                                             .container button {
@@ -922,11 +981,28 @@
                                                                 padding: 0;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" onclick="sendNudge(event);" title="Cutucar">
                                                             <img src="./images/ui/nudge.png" alt="nudge">
-                                                            <span></span>
-
                                                         </div>
+                                                        <script>
+                                                            function sendNudge(event) {
+                                                                fetch('/send-message', {
+                                                                        method: 'POST',
+                                                                        headers: {
+                                                                            'Content-Type': 'application/json',
+                                                                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                                                        },
+                                                                        body: JSON.stringify({
+                                                                            message: 'nudge'
+                                                                        })
+                                                                    })
+                                                                    .then(response => response.json())
+                                                                    .then(data => {})
+                                                                    .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                    });
+                                                            }
+                                                        </script>
                                                     </template>
                                                 </simple-button>
                                             </div>
@@ -962,7 +1038,7 @@
                                                                 height: 16px;
                                                             }
                                                         </style>
-                                                        <div class="container">
+                                                        <div class="container" style="cursor: not-allowed">
                                                             <img src="./images/ui/paint.png" alt="paint">
                                                         </div>
                                                     </template>
@@ -1128,6 +1204,20 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        window.newMessage = () => {
+            const audio = new Audio('./sounds/new_message.mp3');
+            audio.play().catch(error => {
+                console.error('Erro ao tocar o som new_message:', error);
+            });
+        }
+        window.nudge = () => {
+            window.newMessage = () => {
+                const audio = new Audio('./sounds/nudge.mp3');
+                audio.play().catch(error => {
+                    console.error('Erro ao tocar o som nudge:', error);
+                });
+            }
+        }
         const styleContent = `
 img {
     user-select: none !important;
