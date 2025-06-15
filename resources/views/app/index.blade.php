@@ -3,6 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MSN Messenger</title>
     <base href="./">
 
@@ -75,17 +76,7 @@
                             url(./images/ui/main-bottom2.png);
                         background-repeat: no-repeat, no-repeat, repeat-x, no-repeat, no-repeat, repeat-y, repeat-y, repeat-x;
                         background-position: top left, top right, top, bottom left, bottom -5px right -5px, bottom left, bottom right, bottom;
-
-                        {{-- clip-path: polygon(
-                            0 0,          /* Ponto 1: Top-left corner */
-                            100% 0,         /* Ponto 2: Um pouco à direita no topo */
-                            100% 100%,       /* Ponto 3: Top-right corner */
-                            0 100%,       /* Ponto 3: Top-right corner */
-                            0 0,          /* Ponto 4: (repetição do início - Top-left de novo) */
-                            100% 0,       /* Ponto 5: Top-right novamente */
-                            100% 100%,    /* Ponto 6: Bottom-right corner */
-                            0 100%        /* Ponto 7: Bottom-left corner */
-                        ); --}} pointer-events: none;
+                        pointer-events: none;
                     }
                 </style>
                 <div class="container">
@@ -1001,36 +992,38 @@
 
 </body>
 <script>
-    const styleContent = `
+    document.addEventListener('DOMContentLoaded', () => {
+        const styleContent = `
 img {
     user-select: none !important;
 }
 `;
 
-    function applyStyleToShadowRoot(shadowRoot) {
-        if (shadowRoot._styleInjected) return;
-        shadowRoot._styleInjected = true;
+        function applyStyleToShadowRoot(shadowRoot) {
+            if (shadowRoot._styleInjected) return;
+            shadowRoot._styleInjected = true;
 
-        const style = document.createElement('style');
-        style.textContent = styleContent;
-        shadowRoot.appendChild(style);
-    }
+            const style = document.createElement('style');
+            style.textContent = styleContent;
+            shadowRoot.appendChild(style);
+        }
 
-    function applyStyleToAllShadowRoots(root) {
-        root.querySelectorAll('*').forEach(el => {
-            if (el.shadowRoot) {
-                applyStyleToShadowRoot(el.shadowRoot);
-                applyStyleToAllShadowRoots(el.shadowRoot);
+        function applyStyleToAllShadowRoots(root) {
+            root.querySelectorAll('*').forEach(el => {
+                if (el.shadowRoot) {
+                    applyStyleToShadowRoot(el.shadowRoot);
+                    applyStyleToAllShadowRoots(el.shadowRoot);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => applyStyleToAllShadowRoots(document));
+            } else {
+                setTimeout(() => applyStyleToAllShadowRoots(document), 0);
             }
         });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => applyStyleToAllShadowRoots(document));
-        } else {
-            setTimeout(() => applyStyleToAllShadowRoots(document), 0);
-        }
     });
 </script>
 
