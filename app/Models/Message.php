@@ -12,4 +12,9 @@ class Message extends Model
     use SoftDeletes;
 
     protected $fillable = ['chat_id', 'author_id', 'content'];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }

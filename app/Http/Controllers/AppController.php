@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,11 +20,22 @@ class AppController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $request->validate([
+        $usuario = Auth::user();
+        $message = $request->validate([
+            'chat_id' => 'nullable|integer',
             'message' => 'required|string',
         ]);
 
-        return response()->json(['success' => true, 'message' => $request->input('message')]);
+        $msg = \App\Models\Message::create([
+            'chat_id' => $request->input('chat', 1), // Default chat ID
+            'author_id' => $usuario->id,
+            'content' => $message['message'],
+        ]);
+        if (!$msg) {
+            return response()->json(['success' => false, 'message' => 'Erro ao enviar a mensagem.']);
+        }
+
+        return response()->json(['success' => true, 'message' => $message['message']]);
     }
 
     public function getMessages(Request $request)
@@ -31,17 +44,32 @@ class AppController extends Controller
             'chat' => 'required|integer',
         ]);
 
-        $chatId = $request->input('chat');
+        $chatId = $request->input('chat', 1);
 
-        // Aqui você faria uma consulta real, ex:
-        // $messages = Message::where('chat_id', $chatId)->orderBy('created_at')->get();
+        $messages = Message::with('author')
+            ->where('chat_id', $chatId)
+            ->orderBy('created_at')
+            ->limit(100)
+            ->get();
 
-        // Simulação de mensagens para o chat
-        $messages = [
-            ['id' => 1, 'author' => "Guest", 'text' => "Mensagem do chat $chatId - Olá!"],
-            ['id' => 2, 'author' => "Guest", 'text' => "Mensagem do chat $chatId - Como vai?"],
-        ];
+        $authUserId = Auth::id();
 
-        return response()->json(['success' => true, 'messages' => $messages]);
+        $messagesArray = $messages->map(function ($msg) use ($authUserId) {
+            $usuario = $msg->author;
+
+            if (!$usuario || !$usuario->name) {
+                $author = "Desconhecido";
+            } else {
+                $author = ($msg->author_id == $authUserId) ? 'Você' : ($usuario->username ?? $usuario->name);
+            }
+
+            return [
+                'id' => $msg->id,
+                'author' => $author,
+                'text' => $msg->content
+            ];
+        });
+
+        return response()->json(['success' => true, 'messages' => $messagesArray]);
     }
 }

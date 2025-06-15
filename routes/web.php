@@ -19,7 +19,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [LoginController::class, 'register']);
 });
 
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/app', [AppController::class, 'app'])->name('app');

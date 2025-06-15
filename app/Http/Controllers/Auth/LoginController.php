@@ -73,20 +73,20 @@ class LoginController extends Controller
             ]);
             // verificar se criou o usuário com sucesso
             if (!$usuario) {
-                return back()->withErrors([
+                return redirect()->route('auth')->withErrors([
                     'register' => 'Não foi possível registrar o usuário. Tente novamente.',
                 ])->withInput();
             }
 
             // Retorna para a tela de registro com mensagem de sucesso
-            return redirect('/login')->with('message', 'Registro realizado com sucesso!');
+            return redirect('/auth')->with('message', 'Registro realizado com sucesso!');
         } catch (Exception $e) {
             if ($e->getCode() === 0) { // Erro de duplicidade
-                return back()->withErrors([
+                return redirect()->route('auth')->withErrors([
                     'email' => 'Este e-mail já está cadastrado.',
                 ])->withInput();
             } else {
-                return back()->withErrors([
+                return redirect()->route('auth')->withErrors([
                     'register' => 'Não foi possível registrar o usuário. Verifique os dados e tente novamente.',
                 ])->withInput();
             }
