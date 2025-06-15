@@ -49,7 +49,7 @@
                         width: var(--width);
                         height: var(--height);
                         min-width: 300px;
-                        min-height: 400px;
+                        min-height: 555px;
                         max-width: calc(var(--width) + 100px);
                         max-height: calc(var(--height) + 100px);
                         background: #D7E4F5 url(./images/ui/main-background.png) bottom right no-repeat;
@@ -203,7 +203,7 @@
                                     flex-direction: column;
                                     align-items: center;
                                     justify-content: center;
-                                    margin: 4px 8px;
+                                    padding: 4px 0;
                                 }
                             </style>
                             <div class="container">
@@ -339,6 +339,14 @@
                                                 filter: brightness(0.95);
                                             }
 
+                                            p {
+                                                margin: 7px;
+                                                color: #0b2c90;
+                                                font-size: 16px;
+                                                font-weight: 500;
+                                                cursor: pointer;
+                                            }
+
                                             .alert.alert-danger {
                                                 background: linear-gradient(135deg, #ffbebe, #ff6b6b);
                                                 border: 2px solid #c0392b;
@@ -361,6 +369,7 @@
                                             .alert.alert-danger li {
                                                 list-style-type: square;
                                                 list-style-type: none;
+                                                max-width: 240px;
                                             }
 
                                             .alert.alert-danger::before {
@@ -371,46 +380,185 @@
                                                 font-size: 16px;
                                                 text-shadow: 1px 1px 3px rgba(0, 0, 0, .7);
                                             }
+
+                                            .alert.alert-success {
+                                                background: linear-gradient(135deg, #b9f6ca, #00c853);
+                                                border: 2px solid #009624;
+                                                border-radius: 6px;
+                                                padding: 10px 15px;
+                                                color: #004d1a;
+                                                font-family: Tahoma, Verdana, sans-serif;
+                                                font-size: 13px;
+                                                box-shadow: 2px 2px 8px rgba(0, 77, 26, 0.3);
+                                                position: relative;
+                                                margin-top: 15px;
+                                                padding-left: 35px;
+                                            }
+
+                                            .alert.alert-success ul {
+                                                margin: 0;
+                                                padding-left: 20px;
+                                                list-style-type: none;
+                                            }
+
+                                            .alert.alert-success li {
+                                                list-style-type: none;
+                                            }
+
+                                            .alert.alert-success::before {
+                                                content: '✅';
+                                                position: absolute;
+                                                top: 6px;
+                                                left: 8px;
+                                                font-size: 16px;
+                                                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+                                            }
+
+                                            .photo-radio-group {
+                                                display: flex;
+                                                gap: 10px;
+                                            }
+
+                                            .photo-radio-group label {
+                                                cursor: pointer;
+                                                border: 2px solid transparent;
+                                                border-radius: 6px;
+                                                padding: 4px;
+                                                transition: all 0.2s ease;
+                                            }
+
+                                            .photo-radio-group label img {
+                                                width: 35px;
+                                                height: 35px;
+                                                border-radius: 4px;
+                                                display: block;
+                                                background: #fff;
+                                            }
+
+                                            .photo-radio-group input[type="radio"] {
+                                                display: none;
+                                            }
+
+                                            .photo-radio-group input[type="radio"]:checked+img {
+                                                border: 2px solid #0b2c90ce;
+                                                box-shadow: 0 0 5px #0b2c90ce;
+                                            }
                                         </style>
-                                        <form action="/login" method="POST" class="container">
-                                            @csrf
-                                            <div class="form-control">
-                                                <label for="email">Email:</label>
-                                                <input type="email" id="email" required name="email"
-                                                    placeholder="Digite seu email" value="{{ old('email') }}">
-                                            </div>
-
-                                            <div class="form-control">
-                                                <label for="password">Senha:</label>
-                                                <input type="password" id="password" minlength="6" required
-                                                    name="password" placeholder="Digite sua senha">
-                                                <img onclick="eye(event);" src="./images/ui/eye-open.png"
-                                                    alt="">
-                                            </div>
-
-                                            <div class="checkboxs">
-                                                <input type="checkbox" id="remember" name="remember"
-                                                    {{ old('remember') ? 'checked' : '' }}>
-                                                <label for="remember">Lembrar-me</label>
-                                            </div>
-                                            @if ($errors->any())
-                                                <div class="alert alert-danger">
-                                                    <ul>
-                                                        @foreach ($errors->all() as $error)
-                                                            <li>{{ $error }}</li>
-                                                        @endforeach
-                                                    </ul>
+                                        <main id="login">
+                                            <form action="/login" method="POST" class="container">
+                                                @csrf
+                                                <div class="form-control">
+                                                    <label for="email">Email:</label>
+                                                    <input type="email" id="email" required name="email"
+                                                        placeholder="Digite seu email" value="{{ old('email') }}">
                                                 </div>
-                                            @endif
-                                            <button type="submit">Login</button>
-                                        </form>
+
+                                                <div class="form-control">
+                                                    <label for="password">Senha:</label>
+                                                    <input type="password" id="password" minlength="6" required
+                                                        name="password" placeholder="Digite sua senha">
+                                                    <img onclick="eye(event);" src="./images/ui/eye-open.png"
+                                                        alt="">
+                                                </div>
+
+                                                <div class="checkboxs">
+                                                    <input type="checkbox" id="remember" name="remember"
+                                                        {{ old('remember') ? 'checked' : '' }}>
+                                                    <label for="remember">Lembrar-me</label>
+                                                </div>
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                @if (session('message'))
+                                                    <div class="alert alert-success">
+                                                        {{ session('message') }}
+                                                    </div>
+                                                @endif
+                                                <button type="submit">Login</button>
+                                                <p onclick="createAccount(event);">Criar conta</p>
+                                            </form>
+                                        </main>
+                                        <main id="register" style="display: none;">
+                                            <form action="/register" method="POST" class="container">
+                                                @csrf
+
+                                                <div class="photo-radio-group">
+                                                    <label>
+                                                        <input type="radio" name="avatar" value="msn.png"
+                                                            checked>
+                                                        <img src="./images/ui/msn.png" alt="Avatar 1">
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="radio" name="avatar" value="duck.png">
+                                                        <img src="./images/ui/duck.png" alt="Avatar 2">
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="radio" name="avatar" value="borboleta.png">
+                                                        <img src="./images/ui/borboleta.png" alt="Avatar 3">
+                                                    </label>
+                                                </div>
+
+
+                                                <div class="form-control">
+                                                    <label for="name">Nome:</label>
+                                                    <input type="text" id="name" required name="name" minlength="3"
+                                                        placeholder="Digite o seu nome" value="{{ old('name') }}">
+                                                </div>
+
+                                                <div class="form-control">
+                                                    <label for="email">Email:</label>
+                                                    <input type="email" id="email" required name="email"
+                                                        placeholder="Digite seu email" value="{{ old('email') }}">
+                                                </div>
+
+                                                <div class="form-control">
+                                                    <label for="password2">Senha:</label>
+                                                    <input type="password" id="password2" minlength="6" required
+                                                        name="password" placeholder="Digite sua senha">
+                                                    <img onclick="eye(event);" src="./images/ui/eye-open.png"
+                                                        alt="">
+                                                </div>
+
+                                                <div class="checkboxs">
+                                                    <input type="checkbox" id="terms" required name="terms"
+                                                        {{ old('terms') ? 'checked' : '' }}>
+                                                    <label for="terms">Aceito os termos de uso</label>
+                                                </div>
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                                @if (session('message'))
+                                                    <div class="alert alert-success">
+                                                        {{ session('message') }}
+                                                    </div>
+                                                @endif
+                                                <button type="submit">Registrar</button>
+                                                <p onclick="loginAccount(event);">Voltar</p>
+                                            </form>
+                                        </main>
 
                                         <script>
                                             function eye(event) {
-                                                const eyeIcon = event.target; // a imagem clicada
-                                                const shadow = eyeIcon.getRootNode(); // o shadow root
+                                                const eyeIcon = event.target; // Ícone clicado
+                                                const container = eyeIcon.closest('.form-control'); // Pega o .form-control mais próximo
+                                                const passwordInput = container.querySelector(
+                                                    'input[type="password"], input[type="text"]'); // Pega o input dentro dele
 
-                                                const passwordInput = shadow.getElementById('password');
+                                                if (!passwordInput) return; // Se por algum motivo não achar, evita erro
 
                                                 if (passwordInput.type === 'password') {
                                                     passwordInput.type = 'text';
@@ -419,6 +567,31 @@
                                                     passwordInput.type = 'password';
                                                     eyeIcon.src = './images/ui/eye-open.png';
                                                 }
+                                            }
+
+                                            function createAccount(event) {
+                                                event.preventDefault();
+
+                                                const shadow = event.target.getRootNode();
+
+                                                const loginForm = shadow.getElementById('login');
+                                                const registerForm = shadow.getElementById('register');
+
+                                                if (loginForm && registerForm) {
+                                                    loginForm.style.display = 'none';
+                                                    registerForm.style.display = 'block';
+                                                }
+                                            }
+
+                                            function loginAccount(event) {
+                                                event.preventDefault();
+
+                                                const shadow = event.target.getRootNode();
+                                                const loginForm = shadow.getElementById('login');
+                                                const registerForm = shadow.getElementById('register');
+
+                                                loginForm.style.display = 'block';
+                                                registerForm.style.display = 'none';
                                             }
                                         </script>
                                     </template>

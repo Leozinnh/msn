@@ -9,12 +9,15 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect('/app');
     }
-    return redirect('/login');
+    return redirect('/auth');
 });
 
+Route::middleware('guest')->group(function () {
+    Route::get('/auth', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/register', [LoginController::class, 'register']);
+});
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
