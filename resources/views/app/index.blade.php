@@ -1238,36 +1238,36 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // let keepAliveRunning = false;
-        // function sendKeepAlive() {
-        //     if (keepAliveRunning || document.hidden) return;
-        //     keepAliveRunning = true;
+        let keepAliveRunning = false;
+        function sendKeepAlive() {
+            if (keepAliveRunning || document.hidden) return;
+            keepAliveRunning = true;
 
-        //     fetch('/keepAlive', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        //             },
-        //             body: JSON.stringify({
-        //                 page: 'App'
-        //             })
-        //         })
-        //         .catch(error => console.error('Erro no keepAlive:', error))
-        //         .finally(() => {
-        //             keepAliveRunning = false;
-        //         });
-        // }
-        // function keepAliveLoop() {
-        //     sendKeepAlive();
-        //     setTimeout(keepAliveLoop, 10000); 
-        // }
-        // document.addEventListener('visibilitychange', () => {
-        //     if (!document.hidden) {
-        //         sendKeepAlive();
-        //     }
-        // });
-        // keepAliveLoop();
+            fetch('/keepAlive', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        page: 'App'
+                    })
+                })
+                .catch(error => console.error('Erro no keepAlive:', error))
+                .finally(() => {
+                    keepAliveRunning = false;
+                });
+        }
+        function keepAliveLoop() {
+            sendKeepAlive();
+            setTimeout(keepAliveLoop, 10000); 
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                sendKeepAlive();
+            }
+        });
+        keepAliveLoop();
 
 
         // $(function() {

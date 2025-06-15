@@ -92,8 +92,7 @@ class LoginController extends Controller
             }
 
             // Retorna para a tela de registro com mensagem de sucesso
-            // return redirect('/auth')->with('message', 'Registro realizado com sucesso!');
-            return redirect('/auth');
+            return redirect('/auth')->with('message', 'Registro realizado com sucesso!');
         } catch (Exception $e) {
             if ($e->getCode() === 0) { // Erro de duplicidade
                 return redirect()->route('login')->withErrors([

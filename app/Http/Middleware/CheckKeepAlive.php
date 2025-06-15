@@ -14,7 +14,7 @@ class CheckKeepAlive
         $excludedRoutes = [
             'login',
             'logout',
-            'keepAlive',
+            // 'keepAlive',
         ];
 
         // Se a rota atual for uma das ignoradas, apenas continua
