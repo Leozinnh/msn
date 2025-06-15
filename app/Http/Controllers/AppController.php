@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,15 @@ class AppController extends Controller
         if (!$usuario) {
             return redirect()->route('login');
         }
-        return view('app.index', compact('usuario'));
+
+        $grupos = Group::with('owner')
+            ->withCount('members')
+            // ->whereHas('members', function ($q) use ($usuario) {
+            //     $q->where('user_id', $usuario->id); // Apenas grupos onde ele é membro
+            // })
+            ->get();
+
+        return view('app.index', compact('usuario', 'grupos'));
     }
 
     public function sendMessage(Request $request)
@@ -27,7 +36,7 @@ class AppController extends Controller
         ]);
 
         $msg = \App\Models\Message::create([
-            'chat_id' => $request->input('chat', 1), // Default chat ID
+            'chat_id' => $request->input('chat_id', 1), // Default chat ID
             'author_id' => $usuario->id,
             'content' => $message['message'],
         ]);
@@ -41,10 +50,10 @@ class AppController extends Controller
     public function getMessages(Request $request)
     {
         $request->validate([
-            'chat' => 'required|integer',
+            'chat_id' => 'required|integer',
         ]);
 
-        $chatId = $request->input('chat', 1);
+        $chatId = $request->input('chat_id', 1);
 
         $messages = Message::with('author')
             ->where('chat_id', $chatId)

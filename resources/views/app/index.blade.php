@@ -480,41 +480,113 @@
                                             aside.status.off {
                                                 background: #e0240b;
                                             }
+
+                                            .groups {
+                                                position: relative;
+                                                height: auto;
+                                                max-height: 176px;
+                                                background: #fff;
+                                                padding: 2px;
+                                                word-wrap: break-word;
+                                                word-break: break-all;
+                                                overflow-y: auto;
+                                            }
+
+                                            .groups .group {
+                                                width: 100%;
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: space-between;
+                                                padding: 4px 0;
+                                                border-bottom: 1px solid #586170;
+                                            }
+
+                                            .groups .group:last-child {
+                                                border-bottom: none;
+                                            }
+
+                                            .groups .group img {
+                                                width: 32px;
+                                                height: 32px;
+                                                border-radius: 6px;
+                                                border: 1px solid #586170;
+                                                margin-right: 8px;
+                                                padding: 1px;
+                                            }
+
+                                            .groups .group span {
+                                                /* flex: 1; */
+                                                font-family: Verdana;
+                                                font-size: 10px;
+                                                color: #000;
+                                            }
+
+                                            .groups .group span.members {
+                                                font-size: 9px;
+                                                color: #666;
+                                            }
+
+                                            .groups .group button.join {
+                                                background: #FBFBFB;
+                                                box-shadow: -4px -4px 4px #C0C9E0 inset;
+                                                border: 1px solid #93989C;
+                                                color: #969C9A;
+                                                padding: 4px 8px;
+                                                border-radius: 4px;
+                                                cursor: pointer;
+                                            }
+
+                                            .groups .group button.join:is(:hover, :active) {
+                                                background: #F0F0F0;
+                                            }
                                         </style>
                                         <div class="container">
-                                            <div class="subject">Para: <strong>Todos
-                                                    (Grupo Geral)</strong>
+                                            <div class="subject" id="group">Para: ?</div>
+                                            <div class="groups" id="groups">
+                                                @foreach ($grupos as $grupo)
+                                                    <div class="group" id="group-{{ $grupo->id }}"
+                                                        group-name="{{ $grupo->name }}">
+                                                        <div style="display: flex; flex-direction: row;">
+                                                            <img src="./images/ui/{{ $grupo->photo ? $grupo->photo : 'persons.jpeg' }}"
+                                                                alt="Foto do Grupo">
+                                                            <div
+                                                                style="justify-content: center;display: flex;flex-direction: column;">
+                                                                {{ $grupo->name }}
+                                                                {{ $grupo->is_private ? '(Privado)' : '(Público)' }}
+                                                                {{ $grupo->owner_id == auth()->user()->id ? '(Seu grupo)' : '' }}
+                                                                <span style="font-size: 8px;color:#666;"
+                                                                    class="description">{{ $grupo->description }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <span class="members">Membro's:
+                                                            {{ $grupo->members_count }}</span>
+                                                        <button class="join"
+                                                            onclick="joinGroup('{{ $grupo->id }}')">Entrar</button>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div class="history" id="history">
+                                            <div class="history" id="history" style="display: none">
                                             </div>
                                         </div>
-
                                         <script>
                                             document.addEventListener('DOMContentLoaded', () => {
-                                                const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
-                                                const remoteUserEl = windowEl.querySelector('msn-messenger-remote-user');
-                                                if (!remoteUserEl) return console.error('msn-messenger-remote-user não encontrado');
+                                                let chatId = null;
+                                                let lastChatId = null;
+                                                let fetchLoopRunning = false;
 
-                                                const remoteUserShadow = remoteUserEl.shadowRoot;
-                                                if (!remoteUserShadow) return console.error('shadowRoot do msn-messenger-remote-user é null');
+                                                let historyIds = new Set();
 
-                                                const historyChatEl = remoteUserShadow.querySelector('msn-messenger-history-chat');
-                                                if (!historyChatEl) return console.error('msn-messenger-history-chat não encontrado');
+                                                let stopFetchLoop = () => {
+                                                    fetchLoopRunning = false;
+                                                };
 
-                                                const tryInit = () => {
-                                                    const historyChatShadow = historyChatEl.shadowRoot;
-                                                    if (!historyChatShadow) {
-                                                        setTimeout(tryInit, 100);
-                                                        return;
-                                                    }
-
-                                                    const historyEl = historyChatShadow.querySelector('#history');
-                                                    if (!historyEl) return console.error('Elemento #history não encontrado');
-
-                                                    const historyIds = new Set();
-                                                    const chatId = 1;
+                                                let startFetchLoop = (historyEl) => {
+                                                    if (fetchLoopRunning) return; // Já tem um loop rodando
+                                                    fetchLoopRunning = true;
 
                                                     function fetchMessages() {
+                                                        if (!fetchLoopRunning || chatId === null) return;
+
                                                         fetch('/get-messages', {
                                                                 method: 'POST',
                                                                 headers: {
@@ -522,7 +594,7 @@
                                                                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                                 },
                                                                 body: JSON.stringify({
-                                                                    chat: chatId
+                                                                    chat_id: chatId
                                                                 })
                                                             })
                                                             .then(res => res.json())
@@ -536,19 +608,17 @@
 
                                                                             if (msg.text === "nudge") {
                                                                                 const isSelf = (msg.author === "Você");
-                                                                                if (!isSelf) {
-                                                                                    nudge();
-                                                                                }
+                                                                                if (!isSelf) nudge();
                                                                                 msg.text = isSelf ?
-                                                                                    "<mark>Você alertou o usuário com um cutucão!</mark>" :
-                                                                                    "<mark>Alertou você com um cutucão!</mark>";
+                                                                                    "<mark>Você alertou com um cutucão!</mark>" :
+                                                                                    "<mark>Você recebeu um cutucão!</mark>";
                                                                             }
 
                                                                             p.innerHTML =
                                                                                 `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
                                                                             historyIds.add(`msg-${msg.id}`);
-                                                                            if (msg.author != "Você") newMessage();
+                                                                            if (msg.author != "Você" && msg.text != "nudge") newMessage();
                                                                         }
                                                                     });
                                                                     if (fragment.children.length > 0) {
@@ -558,15 +628,61 @@
                                                                 }
                                                             })
                                                             .catch(console.error)
-                                                            .finally(() => setTimeout(fetchMessages, 1000));
+                                                            .finally(() => {
+                                                                if (fetchLoopRunning) setTimeout(fetchMessages, 1000);
+                                                            });
                                                     }
 
                                                     fetchMessages();
                                                 };
 
-                                                tryInit();
+                                                window.joinGroup = (groupId) => {
+                                                    console.log(`Entrando no grupo ${groupId}`);
+
+                                                    // Parar o loop anterior (interrompe o fetch antigo)
+                                                    stopFetchLoop();
+
+                                                    // Resetar o array de mensagens recebidas
+                                                    historyIds.clear();
+
+                                                    chatId = groupId;
+                                                    localStorage.setItem('chatId', chatId);
+
+                                                    const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
+                                                    const remoteUserEl = windowEl.querySelector('msn-messenger-remote-user');
+                                                    if (!remoteUserEl) return console.error('msn-messenger-remote-user não encontrado');
+
+                                                    const remoteUserShadow = remoteUserEl.shadowRoot;
+                                                    const historyChatEl = remoteUserShadow.querySelector('msn-messenger-history-chat');
+                                                    if (!historyChatEl) return console.error('msn-messenger-history-chat não encontrado');
+
+                                                    const historyChatShadow = historyChatEl.shadowRoot;
+                                                    if (!historyChatShadow) return console.error('shadowRoot do msn-messenger-history-chat é null');
+
+                                                    const group = historyChatShadow.querySelector(`#group-${groupId}`);
+                                                    if (!group) return console.error(`Grupo ${groupId} não encontrado no historyChat`);
+
+                                                    const name = group.getAttribute('group-name');
+                                                    const description = group.querySelector('.description')?.innerText || '';
+
+                                                    historyChatShadow.querySelector('#group').innerText = `Grupo: ${name} (${description})`;
+                                                    historyChatShadow.querySelector('#history').style.display = 'block';
+                                                    historyChatShadow.querySelector('#groups').style.display = 'none';
+
+                                                    const historyEl = historyChatShadow.querySelector('#history');
+
+                                                    // 👇 Aqui é a limpeza do histórico visual antes de começar o fetch do novo grupo
+                                                    historyEl.innerHTML = '';
+
+                                                    // Iniciar o loop de mensagens do novo grupo
+                                                    startFetchLoop(historyEl);
+                                                };
+
                                             });
                                         </script>
+
+                                        </script>
+
 
                                     </template>
                                 </msn-messenger-history-chat>
@@ -1019,6 +1135,8 @@
                                                         </div>
                                                         <script>
                                                             function sendNudge(event) {
+                                                                var chatId = localStorage.getItem('chatId');
+
                                                                 fetch('/send-message', {
                                                                         method: 'POST',
                                                                         headers: {
@@ -1026,6 +1144,7 @@
                                                                             'X-CSRF-TOKEN': "{{ csrf_token() }}"
                                                                         },
                                                                         body: JSON.stringify({
+                                                                            chat_id: chatId,
                                                                             message: 'nudge'
                                                                         })
                                                                     })
@@ -1117,6 +1236,7 @@
 
                                                 if (message) {
                                                     console.log('Sending message:', message);
+                                                    var chatId = localStorage.getItem('chatId');
 
                                                     fetch('/send-message', {
                                                             method: 'POST',
@@ -1125,6 +1245,7 @@
                                                                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
                                                             },
                                                             body: JSON.stringify({
+                                                                chat_id: chatId,
                                                                 message: message
                                                             })
                                                         })
@@ -1161,6 +1282,7 @@
                                             .picture {
                                                 width: 96px;
                                                 height: 96px;
+                                                background: #fff;
                                                 border: 1px solid #586170;
                                                 border-radius: 8px;
                                                 transform: translateY(4px);
@@ -1239,6 +1361,7 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         let keepAliveRunning = false;
+
         function sendKeepAlive() {
             if (keepAliveRunning || document.hidden) return;
             keepAliveRunning = true;
@@ -1258,9 +1381,10 @@
                     keepAliveRunning = false;
                 });
         }
+
         function keepAliveLoop() {
             sendKeepAlive();
-            setTimeout(keepAliveLoop, 10000); 
+            setTimeout(keepAliveLoop, 10000);
         }
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {

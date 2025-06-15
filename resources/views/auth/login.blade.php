@@ -238,7 +238,8 @@
                                             }
                                         </style>
                                         <div class="container">
-                                            <img class="picture" id="avatar" src="./images/ui/msn.png" alt="Avatar">
+                                            <img class="picture" id="avatar" src="./images/ui/msn.png"
+                                                alt="Avatar">
                                         </div>
                                     </template>
                                 </msn-messenger-avatar>
@@ -498,17 +499,17 @@
                                                 @csrf
 
                                                 <div class="photo-radio-group">
-                                                    <label>
+                                                    <label onclick="selectAvatar('msn.png')">
                                                         <input type="radio" name="avatar" value="msn.png" checked>
                                                         <img src="./images/ui/msn.png" alt="Avatar 1">
                                                     </label>
 
-                                                    <label>
+                                                    <label onclick="selectAvatar('duck.png')">
                                                         <input type="radio" name="avatar" value="duck.png">
                                                         <img src="./images/ui/duck.png" alt="Avatar 2">
                                                     </label>
 
-                                                    <label>
+                                                    <label onclick="selectAvatar('borboleta.png')">
                                                         <input type="radio" name="avatar" value="borboleta.png">
                                                         <img src="./images/ui/borboleta.png" alt="Avatar 3">
                                                     </label>
@@ -601,6 +602,21 @@
 
                                                 loginForm.style.display = 'block';
                                                 registerForm.style.display = 'none';
+                                            }
+
+                                            function selectAvatar(avatar) {
+                                                const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
+                                                const authEl = windowEl.querySelector('msn-messenger-auth');
+                                                if (!authEl) return console.error('msn-messenger-auth não encontrado');
+
+                                                const messageShadow = authEl.shadowRoot;
+                                                if (!messageShadow) return console.error('shadowRoot do msn-messenger-local-user é null');
+
+                                                const divAvatarEl = messageShadow.querySelector('msn-messenger-avatar');
+                                                if (!divAvatarEl) return console.error('msn-messenger-avatar não encontrado');
+
+                                                const avatarEl = divAvatarEl.shadowRoot.querySelector('#avatar');
+                                                avatarEl.src = `./images/ui/${avatar}`;
                                             }
                                         </script>
                                     </template>
