@@ -234,10 +234,11 @@
                                                 height: 96px;
                                                 border: 1px solid #586170;
                                                 border-radius: 8px;
+                                                background: #fff;
                                             }
                                         </style>
                                         <div class="container">
-                                            <img class="picture" src="./images/ui/msn.png" alt="Avatar">
+                                            <img class="picture" id="avatar" src="./images/ui/msn.png" alt="Avatar">
                                         </div>
                                     </template>
                                 </msn-messenger-avatar>
