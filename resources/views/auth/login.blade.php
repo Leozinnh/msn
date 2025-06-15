@@ -471,7 +471,7 @@
 
                                                 <div class="checkboxs">
                                                     <input type="checkbox" id="remember" name="remember"
-                                                        {{ old('remember') ? 'checked' : '' }}>
+                                                        {{ old('remember') ? 'checked' : '' }} checked>
                                                     <label for="remember">Lembrar-me</label>
                                                 </div>
                                                 @if ($errors->any())
@@ -646,20 +646,6 @@
                     <div class="border-window"></div>
                 </div>
             </template>
-            <main class="absolute top-0 left-0 bg-red-600 w-[100px] h-[100px] flex justify-center items-center">
-                <div class="flex flex-col items-center gap-4">
-                    <img src="./images/ui/msn-logo.png" alt="MSN Logo" width="200px" height="100px">
-                    <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-2">
-                        @csrf
-                        <input type="text" name="email" placeholder="Email" required
-                            class="p-2 rounded border border-gray-300 w-64">
-                        <input type="password" name="password" placeholder="Senha" required
-                            class="p-2 rounded border border-gray-300 w-64">
-                        <button type="submit"
-                            class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">Entrar</button>
-                    </form>
-                </div>
-            </main>
         </msn-messenger-window>
     </div>
 

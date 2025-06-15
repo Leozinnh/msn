@@ -34,21 +34,34 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
             'remember' => ['nullable'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $credentials = [
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+        ];
+
+        $remember = ($request->has('remember') && $request->input('remember') == 'on');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended('/app'); // Redireciona pós-login
+
+            $user = Auth::user();
+            $user->keepAlive = now();
+            $user->save();
+
+            return redirect()->intended('/app');
         }
 
         return redirect()->route('login')->withErrors([
             'email' => 'As credenciais estão incorretas.',
         ])->withInput();
     }
+
 
     public function register(Request $request)
     {
@@ -73,20 +86,21 @@ class LoginController extends Controller
             ]);
             // verificar se criou o usuário com sucesso
             if (!$usuario) {
-                return redirect()->route('auth')->withErrors([
+                return redirect()->route('login')->withErrors([
                     'register' => 'Não foi possível registrar o usuário. Tente novamente.',
                 ])->withInput();
             }
 
             // Retorna para a tela de registro com mensagem de sucesso
-            return redirect('/auth')->with('message', 'Registro realizado com sucesso!');
+            // return redirect('/auth')->with('message', 'Registro realizado com sucesso!');
+            return redirect('/auth');
         } catch (Exception $e) {
             if ($e->getCode() === 0) { // Erro de duplicidade
-                return redirect()->route('auth')->withErrors([
+                return redirect()->route('login')->withErrors([
                     'email' => 'Este e-mail já está cadastrado.',
                 ])->withInput();
             } else {
-                return redirect()->route('auth')->withErrors([
+                return redirect()->route('login')->withErrors([
                     'register' => 'Não foi possível registrar o usuário. Verifique os dados e tente novamente.',
                 ])->withInput();
             }
@@ -95,7 +109,14 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Limpa o campo keepAlive do usuário
+        if (Auth::check()) {
+            $user = Auth::user();
+            $user->keepAlive = null;
+            $user->remember_token = null;
+            $user->save();
+            Auth::logout();
+        }
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

@@ -66,7 +66,9 @@ class AppController extends Controller
             return [
                 'id' => $msg->id,
                 'author' => $author,
-                'text' => $msg->content
+                'text' => $msg->content,
+                // 'status' => ($usuario->keepAlive && $usuario->keepAlive->diffInMinutes(now()) < 5) ? 'on' : 'off',
+                'status' => (!$usuario->keepAlive) ? 'on' : 'off',
             ];
         });
 

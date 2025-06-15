@@ -1,7 +1,7 @@
 # 🧾 Clone MSN Messenger - Versão Web
 
 Um projeto nostálgico inspirado no clássico **MSN Messenger**, desenvolvido em **Laravel**, com uma interface moderna recriando o visual original.  
-Aqui você pode **se registrar**, **entrar em grupos existentes**, **criar grupos próprios** e **trocar mensagens em tempo real** com suporte a **emojis**, **status online/offline**, e outros recursos que marcaram época!
+Aqui você pode **se registrar**, **entrar em grupos existentes**, **sons clássicos**, **criar grupos próprios** e **trocar mensagens em tempo real** com suporte a **emojis**, **status online/offline**, e outros recursos que marcaram época!
 
 ---
 
@@ -13,7 +13,8 @@ Aqui você pode **se registrar**, **entrar em grupos existentes**, **criar grupo
 -   Envio e recebimento de mensagens
 -   Emojis, status e interface com estilo retrô MSN
 -   Histórico de mensagens
--   Atualizações futuras: envio de imagens, sons clássicos de notificação, status de presença, entre outros
+-   Sons clássicos
+-   Atualizações futuras: envio de imagens, status de presença, entre outros
 
 ---
 
@@ -90,7 +91,6 @@ Acesse: http://localhost:8000
 
 -   ✅ Opção de trocar senha (Esqueceu sua senha?)
 -   ✅ Sistema de envio de arquivos (imagens e documentos)
--   ✅ Áudio de notificação estilo MSN
 -   ✅ Animações de "Nudge / Chamar atenção"
 -   ✅ Sistema de status (Disponível, Ocupado, Ausente)
 -   ✅ Integração com Websockets para mensagens em tempo real

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AppController;
-
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -21,9 +21,11 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'checkKeepAlive')->group(function () {
     Route::get('/app', [AppController::class, 'app'])->name('app');
 
     Route::post('/get-messages', [AppController::class, 'getMessages']);
     Route::post('/send-message', [AppController::class, 'sendMessage']);
+
+    Route::post('/keepAlive', [UserController::class, 'keepAlive'])->name('keepAlive');
 });

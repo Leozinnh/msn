@@ -34,8 +34,8 @@
     <script>
         window.console = window.console || function(t) {};
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" defer></script>
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" defer></script> --}}
 </head>
 
 <body translate="no">
@@ -459,10 +459,31 @@
                                             .history p {
                                                 margin: 0;
                                             }
+
+                                            .history p b {
+                                                position: relative;
+                                            }
+
+                                            aside.status {
+                                                position: absolute;
+                                                top: 0;
+                                                right: -4px;
+                                                width: 4px;
+                                                height: 4px;
+                                                border-radius: 100%;
+                                            }
+
+                                            aside.status.on {
+                                                background: #0be041;
+                                            }
+
+                                            aside.status.off {
+                                                background: #e0240b;
+                                            }
                                         </style>
                                         <div class="container">
-                                            <div class="subject">To: <strong>{{ $usuario->name }}
-                                                    ({{ $usuario->email }})</strong>
+                                            <div class="subject">Para: <strong>Todos
+                                                    (Grupo Geral)</strong>
                                             </div>
                                             <div class="history" id="history">
                                             </div>
@@ -524,7 +545,7 @@
                                                                             }
 
                                                                             p.innerHTML =
-                                                                                `<b>${msg.author}</b>: <span>${msg.text}</span>`;
+                                                                                `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
                                                                             historyIds.add(`msg-${msg.id}`);
                                                                             if (msg.author != "Você") newMessage();
@@ -1216,23 +1237,56 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        $(function() {
-            const windowWidth = $(window).width();
-            const windowHeight = $(window).height();
-            const el = $("msn-messenger-window");
 
-            const elWidth = el.outerWidth();
-            const elHeight = el.outerHeight();
+        // let keepAliveRunning = false;
+        // function sendKeepAlive() {
+        //     if (keepAliveRunning || document.hidden) return;
+        //     keepAliveRunning = true;
 
-            el.draggable({
-                containment: [
-                    0, // min X
-                    0, // min Y
-                    windowWidth - elWidth, // max X
-                    windowHeight - elHeight // max Y
-                ]
-            });
-        });
+        //     fetch('/keepAlive', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //             },
+        //             body: JSON.stringify({
+        //                 page: 'App'
+        //             })
+        //         })
+        //         .catch(error => console.error('Erro no keepAlive:', error))
+        //         .finally(() => {
+        //             keepAliveRunning = false;
+        //         });
+        // }
+        // function keepAliveLoop() {
+        //     sendKeepAlive();
+        //     setTimeout(keepAliveLoop, 10000); 
+        // }
+        // document.addEventListener('visibilitychange', () => {
+        //     if (!document.hidden) {
+        //         sendKeepAlive();
+        //     }
+        // });
+        // keepAliveLoop();
+
+
+        // $(function() {
+        //     const windowWidth = $(window).width();
+        //     const windowHeight = $(window).height();
+        //     const el = $("msn-messenger-window");
+
+        //     const elWidth = el.outerWidth();
+        //     const elHeight = el.outerHeight();
+
+        //     el.draggable({
+        //         containment: [
+        //             0, // min X
+        //             0, // min Y
+        //             windowWidth - elWidth, // max X
+        //             windowHeight - elHeight // max Y
+        //         ]
+        //     });
+        // });
 
         window.newMessage = () => {
             const audio = new Audio('./sounds/new_message.mp3');

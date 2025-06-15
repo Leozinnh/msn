@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('foto')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('keepAlive')->nullable();
+            $table->text('page')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
