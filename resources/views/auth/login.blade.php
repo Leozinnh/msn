@@ -48,6 +48,8 @@
                     .container {
                         width: var(--width);
                         height: var(--height);
+                        min-width: 300px;
+                        min-height: 400px;
                         max-width: calc(var(--width) + 100px);
                         max-height: calc(var(--height) + 100px);
                         background: #D7E4F5 url(./images/ui/main-background.png) bottom right no-repeat;
@@ -336,25 +338,89 @@
                                                 transform: scale(0.97);
                                                 filter: brightness(0.95);
                                             }
+
+                                            .alert.alert-danger {
+                                                background: linear-gradient(135deg, #ffbebe, #ff6b6b);
+                                                border: 2px solid #c0392b;
+                                                border-radius: 6px;
+                                                padding: 10px 15px;
+                                                color: #800000;
+                                                font-family: Tahoma, Verdana, sans-serif;
+                                                font-size: 13px;
+                                                box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+                                                position: relative;
+                                                margin-top: 15px;
+                                            }
+
+                                            .alert.alert-danger ul {
+                                                margin: 0;
+                                                padding-left: 20px;
+                                                list-style-type: none;
+                                            }
+
+                                            .alert.alert-danger li {
+                                                list-style-type: square;
+                                                list-style-type: none;
+                                            }
+
+                                            .alert.alert-danger::before {
+                                                content: '⚠️';
+                                                position: absolute;
+                                                top: 6px;
+                                                left: 8px;
+                                                font-size: 16px;
+                                                text-shadow: 1px 1px 3px rgba(0, 0, 0, .7);
+                                            }
                                         </style>
-                                        <div class="container">
+                                        <form action="/login" method="POST" class="container">
+                                            @csrf
                                             <div class="form-control">
                                                 <label for="email">Email:</label>
-                                                <input type="email" id="email" name="email"
-                                                    placeholder="Digite seu email">
+                                                <input type="email" id="email" required name="email"
+                                                    placeholder="Digite seu email" value="{{ old('email') }}">
                                             </div>
+
                                             <div class="form-control">
                                                 <label for="password">Senha:</label>
-                                                <input type="password" id="password" name="password"
-                                                    placeholder="Digite seu email">
-                                                <img src="./images/ui/eye-open.png" alt="">
+                                                <input type="password" id="password" minlength="6" required
+                                                    name="password" placeholder="Digite sua senha">
+                                                <img onclick="eye(event);" src="./images/ui/eye-open.png"
+                                                    alt="">
                                             </div>
+
                                             <div class="checkboxs">
-                                                <input type="checkbox" id="remember" name="remember">
+                                                <input type="checkbox" id="remember" name="remember"
+                                                    {{ old('remember') ? 'checked' : '' }}>
                                                 <label for="remember">Lembrar-me</label>
                                             </div>
-                                            <button>Login</button>
-                                        </div>
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                            <button type="submit">Login</button>
+                                        </form>
+
+                                        <script>
+                                            function eye(event) {
+                                                const eyeIcon = event.target; // a imagem clicada
+                                                const shadow = eyeIcon.getRootNode(); // o shadow root
+
+                                                const passwordInput = shadow.getElementById('password');
+
+                                                if (passwordInput.type === 'password') {
+                                                    passwordInput.type = 'text';
+                                                    eyeIcon.src = './images/ui/eye-close.png';
+                                                } else {
+                                                    passwordInput.type = 'password';
+                                                    eyeIcon.src = './images/ui/eye-open.png';
+                                                }
+                                            }
+                                        </script>
                                     </template>
                                 </msn-messenger-form>
                             </div>
