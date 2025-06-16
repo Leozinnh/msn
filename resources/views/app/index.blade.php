@@ -240,6 +240,8 @@
                                             <script>
                                                 function viewGroups(event) {
                                                     event.stopPropagation();
+                                                    localStorage.removeItem('chatId');
+
                                                     const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
                                                     const remoteUserEl = windowEl.querySelector('msn-messenger-remote-user');
                                                     if (!remoteUserEl) return console.error('msn-messenger-remote-user não encontrado');
@@ -633,7 +635,19 @@
                                                     fetchLoopRunning = false;
                                                 };
 
+
                                                 let startFetchLoop = (historyEl) => {
+
+                                                    setInterval(() => {
+                                                        const newChatId = localStorage.getItem('chatId');
+                                                        if (newChatId != chatId) {
+                                                            console.log(`Mudou o chatId de ${chatId} para ${newChatId}`);
+                                                            chatId = newChatId;
+                                                            stopFetchLoop();
+                                                            historyIds.clear();
+                                                        }
+                                                    }, 5000);
+
                                                     if (fetchLoopRunning) return; // Já tem um loop rodando
                                                     fetchLoopRunning = true;
 
@@ -1517,18 +1531,23 @@
         //     });
         // });
 
+        const audioNewMessage = new Audio('./sounds/new_message.mp3');
+        audioNewMessage.load();
+        const audioNudge = new Audio('./sounds/nudge.mp3');
+        audioNudge.load();
+
         window.newMessage = () => {
-            const audio = new Audio('./sounds/new_message.mp3');
-            audio.play().catch(error => {
+            audioNewMessage.currentTime = 0;
+            audioNewMessage.play().catch(error => {
                 console.error('Erro ao tocar o som new_message:', error);
             });
-        }
+        };
         window.nudge = () => {
-            const audio = new Audio('./sounds/nudge.mp3');
-            audio.play().catch(error => {
+            audioNudge.currentTime = 0;
+            audioNudge.play().catch(error => {
                 console.error('Erro ao tocar o som nudge:', error);
             });
-        }
+        };
 
         const styleContent = `
 img {
