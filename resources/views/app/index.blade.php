@@ -182,7 +182,8 @@
                                             </div>
                                         </template>
                                     </image-circular-button>
-                                    <image-button image="invite" text="Invite" bind="I">
+                                    <image-button image="convidar" text="Convidar" bind="C"
+                                        style="cursor: not-allowed;">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
@@ -204,12 +205,60 @@
                                                 }
                                             </style>
                                             <div class="container">
-                                                <img src="./images/ui/invite.png" alt="Invite">
-                                                <div class="text"><span>I</span>nvite</div>
+                                                <img src="./images/ui/invite.png" alt="Convidar">
+                                                <div class="text"><span>C</span>onvidar</div>
                                             </div>
                                         </template>
                                     </image-button>
-                                    <image-button image="send" text="Send Files" bind="l">
+                                    <image-button image="groups" text="Grupos" bind="G"
+                                        style="padding-left: 15px;cursor: pointer;">
+                                        <template shadowrootmode="open">
+                                            <style>
+                                                .container {
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                }
+
+                                                .text {
+                                                    font-family: Verdana;
+                                                    font-size: 10.5px;
+                                                    letter-spacing: -0.25px;
+                                                    color: #434C4B;
+                                                }
+
+                                                .text span {
+                                                    text-decoration: underline;
+                                                }
+                                            </style>
+                                            <div class="container" onclick="viewGroups(event);">
+                                                <img src="./images/ui/groups.webp" width="30px" height="30px"
+                                                    alt="Grupos">
+                                                <div class="text"><span>G</span>rupos</div>
+                                            </div>
+                                            <script>
+                                                function viewGroups(event) {
+                                                    event.stopPropagation();
+                                                    const windowEl = document.querySelector('msn-messenger-window').shadowRoot;
+                                                    const remoteUserEl = windowEl.querySelector('msn-messenger-remote-user');
+                                                    if (!remoteUserEl) return console.error('msn-messenger-remote-user não encontrado');
+
+                                                    const remoteUserShadow = remoteUserEl.shadowRoot;
+                                                    const historyChatEl = remoteUserShadow.querySelector('msn-messenger-history-chat');
+                                                    if (!historyChatEl) return console.error('msn-messenger-history-chat não encontrado');
+
+                                                    const historyChatShadow = historyChatEl.shadowRoot;
+                                                    if (!historyChatShadow) return console.error('shadowRoot do msn-messenger-history-chat é null');
+
+                                                    historyChatShadow.querySelector('#group').innerText = `Para: ?`;
+                                                    historyChatShadow.querySelector('#history').style.display = 'none';
+                                                    historyChatShadow.querySelector('#groups').style.display = 'block';
+                                                }
+                                            </script>
+                                        </template>
+                                    </image-button>
+                                    {{-- <image-button image="send" text="Send Files" bind="l">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
@@ -235,8 +284,9 @@
                                                 <div class="text">Send Fi<span>l</span>es</div>
                                             </div>
                                         </template>
-                                    </image-button>
-                                    <image-button image="video" text="Video" bind="o">
+                                    </image-button> --}}
+                                    <image-button image="video" text="Video" bind="o"
+                                        style="cursor: not-allowed;">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
@@ -263,7 +313,8 @@
                                             </div>
                                         </template>
                                     </image-button>
-                                    <image-button image="voice" text="Voice" bind="c">
+                                    <image-button image="voice" text="Voice" bind="c"
+                                        style="cursor: not-allowed;">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
@@ -290,7 +341,8 @@
                                             </div>
                                         </template>
                                     </image-button>
-                                    <image-button image="activities" text="Activities" bind="v">
+                                    <image-button image="activities" text="Activities" bind="v"
+                                        style="cursor: not-allowed;">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
@@ -317,7 +369,8 @@
                                             </div>
                                         </template>
                                     </image-button>
-                                    <image-button image="games" text="Games" bind="G">
+                                    <image-button image="games" text="Games" bind="G"
+                                        style="cursor: not-allowed;">
                                         <template shadowrootmode="open">
                                             <style>
                                                 .container {
