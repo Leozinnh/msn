@@ -253,6 +253,18 @@
                                                     const historyChatShadow = historyChatEl.shadowRoot;
                                                     if (!historyChatShadow) return console.error('shadowRoot do msn-messenger-history-chat é null');
 
+                                                    const avatarChatEl = remoteUserShadow.querySelector('msn-messenger-avatar');
+                                                    if (!avatarChatEl) return console.error('msn-messenger-avatar não encontrado');
+
+                                                    const avatarChatShadow = avatarChatEl.shadowRoot;
+                                                    if (!avatarChatShadow) return console.error('shadowRoot do msn-messenger-avatar é null');
+
+                                                    const photo = avatarChatShadow.querySelector(`div.groupPhoto`);
+                                                    if (!photo) return console.error(`div.groupPhoto não encontrado no msn-messenger-avatar`);
+
+                                                    photo.innerHTML =
+                                                        `<button onclick="createGroup(event);">CRIAR GRUPO</button>`;
+
                                                     historyChatShadow.querySelector('#group').innerText = `Para: ?`;
                                                     historyChatShadow.querySelector('#history').style.display = 'none';
                                                     historyChatShadow.querySelector('#groups').style.display = 'block';
@@ -775,12 +787,24 @@
                                                     const remoteUserShadow = remoteUserEl.shadowRoot;
                                                     const historyChatEl = remoteUserShadow.querySelector('msn-messenger-history-chat');
                                                     if (!historyChatEl) return console.error('msn-messenger-history-chat não encontrado');
+                                                    const avatarChatEl = remoteUserShadow.querySelector('msn-messenger-avatar');
+                                                    if (!avatarChatEl) return console.error('msn-messenger-avatar não encontrado');
 
                                                     const historyChatShadow = historyChatEl.shadowRoot;
                                                     if (!historyChatShadow) return console.error('shadowRoot do msn-messenger-history-chat é null');
 
+                                                    const avatarChatShadow = avatarChatEl.shadowRoot;
+                                                    if (!avatarChatShadow) return console.error('shadowRoot do msn-messenger-avatar é null');
+
+
                                                     const group = historyChatShadow.querySelector(`#group-${groupId}`);
                                                     if (!group) return console.error(`Grupo ${groupId} não encontrado no historyChat`);
+
+                                                    const photo = avatarChatShadow.querySelector(`div.groupPhoto`);
+                                                    if (!photo) return console.error(`div.groupPhoto não encontrado no msn-messenger-avatar`);
+
+                                                    photo.innerHTML =
+                                                        `<img class="picture" src="./images/ui/${group.getAttribute('group-photo') || 'persons.jpeg'}" alt="Foto do Grupo">`;
 
                                                     const name = group.getAttribute('group-name');
                                                     const description = group.querySelector('.description')?.innerText || '';
@@ -827,6 +851,7 @@
                                                 border: 1px solid #586170;
                                                 border-radius: 8px;
                                                 transform: translateY(4px);
+                                                margin-bottom: 5px;
                                             }
 
                                             .down {
@@ -835,6 +860,7 @@
                                                 color: #4D5967;
                                                 transform: scaleY(0.5);
                                                 align-self: flex-end;
+                                                display: none;
                                             }
 
                                             .expand {
@@ -842,9 +868,26 @@
                                                 top: 4px;
                                                 right: -9px;
                                             }
+
+                                            div.groupPhoto button {
+                                                background: #FBFBFB;
+                                                box-shadow: -4px -4px 4px #C0C9E0 inset;
+                                                border: 1px solid #93989C;
+                                                color: #434645;
+                                                padding: 6px 8px;
+                                                border-radius: 4px;
+                                                font-size: 13px;
+                                                cursor: not-allowed;
+                                            }
+
+                                            div.groupPhoto button:is(:hover, :active) {
+                                                background: #F0F0F0;
+                                            }
                                         </style>
                                         <div class="container">
-                                            <img class="picture" src="./images/ui/persons.jpeg" alt="Foto do Grupo">
+                                            <div class="groupPhoto">
+                                                <button onclick="createGroup(event);">CRIAR GRUPO</button>
+                                            </div>
                                             <button class="down">⯆</button>
                                             <img class="expand" src="./images/ui/expand-left.png" alt="expand arrow">
                                         </div>
@@ -1405,6 +1448,7 @@
                                                 border: 1px solid #586170;
                                                 border-radius: 8px;
                                                 transform: translateY(4px);
+                                                margin-bottom: 8px;
                                             }
 
                                             .down {
@@ -1413,6 +1457,7 @@
                                                 color: #4D5967;
                                                 transform: scaleY(0.5);
                                                 align-self: flex-end;
+                                                display: none;
                                             }
 
                                             .expand {
