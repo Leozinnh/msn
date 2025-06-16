@@ -655,7 +655,11 @@
                                                                 if (data.success) {
                                                                     const fragment = document.createDocumentFragment();
                                                                     data.messages.forEach(msg => {
-                                                                        if (!historyIds.has(`msg-${msg.id}`)) {
+                                                                        const alreadyInHistory = historyIds.has(`msg-${msg.id}`);
+                                                                        const messageElement = document.getElementById(`msg-${msg.id}`);
+
+                                                                        if (!alreadyInHistory) {
+                                                                            // Mensagem nova (controle por ID)
                                                                             const p = document.createElement('p');
                                                                             p.id = `msg-${msg.id}`;
 
@@ -671,10 +675,43 @@
                                                                                 `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
                                                                             historyIds.add(`msg-${msg.id}`);
-                                                                            if (msg.author != "Você" && msg.text != "nudge")
+
+                                                                            if (msg.author !== "Você" && msg.text !== "nudge") {
                                                                                 newMessage();
+                                                                            }
+
+                                                                        } else if (messageElement) {
+                                                                            const statusEl = messageElement.querySelector(
+                                                                                'aside.status');
+                                                                            if (statusEl && !statusEl.classList.contains(msg.status)) {
+                                                                                statusEl.className = `status ${msg.status}`;
+                                                                            }
                                                                         }
                                                                     });
+
+
+
+                                                                    // data.messages.forEach(msg => {
+                                                                    //     if (!historyIds.has(`msg-${msg.id}`)) {
+                                                                    //         const p = document.createElement('p');
+                                                                    //         p.id = `msg-${msg.id}`;
+
+                                                                    //         if (msg.text === "nudge") {
+                                                                    //             const isSelf = (msg.author === "Você");
+                                                                    //             if (!isSelf) nudge();
+                                                                    //             msg.text = isSelf ?
+                                                                    //                 "<mark>Você alertou com um cutucão!</mark>" :
+                                                                    //                 "<mark>Você recebeu um cutucão!</mark>";
+                                                                    //         }
+
+                                                                    //         p.innerHTML =
+                                                                    //             `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
+                                                                    //         fragment.appendChild(p);
+                                                                    //         historyIds.add(`msg-${msg.id}`);
+                                                                    //         if (msg.author != "Você" && msg.text != "nudge")
+                                                                    //             newMessage();
+                                                                    //     }
+                                                                    // });
                                                                     if (fragment.children.length > 0) {
                                                                         historyEl.appendChild(fragment);
                                                                         historyEl.scrollTop = historyEl.scrollHeight;
@@ -1320,7 +1357,6 @@
                                                         })
                                                         .then(response => response.json())
                                                         .then(data => {
-                                                            console.log('Success:', data);
                                                             chatElement.textContent = '';
                                                         })
                                                         .catch(error => {
