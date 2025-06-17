@@ -686,54 +686,38 @@
                                                             .then(data => {
                                                                 if (data.success) {
                                                                     const fragment = document.createDocumentFragment();
+                                                                    const windowEl = document.querySelector('msn-messenger-window')?.shadowRoot;
+                                                                    const remoteUserEl = windowEl?.querySelector('msn-messenger-remote-user');
+                                                                    const historyChatEl = remoteUserEl?.shadowRoot?.querySelector('msn-messenger-history-chat');
+                                                                    const historyChatShadow = historyChatEl?.shadowRoot;
+
+                                                                    if (!historyChatShadow) return console.error('Não foi possível acessar o shadow DOM do histórico de mensagens');
+
                                                                     data.messages.forEach(msg => {
-                                                                        const windowEl = document.querySelector('msn-messenger-window')
-                                                                            .shadowRoot;
-                                                                        const remoteUserEl = windowEl.querySelector(
-                                                                            'msn-messenger-remote-user');
-                                                                        if (!remoteUserEl) return console.error(
-                                                                            'msn-messenger-remote-user não encontrado');
+                                                                        const msgId = `msg-${msg.id}`;
+                                                                        const messageElement = historyChatShadow.getElementById(msgId);
 
-                                                                        const remoteUserShadow = remoteUserEl.shadowRoot;
-                                                                        const historyChatEl = remoteUserShadow.querySelector(
-                                                                            'msn-messenger-history-chat');
-                                                                        if (!historyChatEl) return console.error(
-                                                                            'msn-messenger-history-chat não encontrado');
-
-                                                                        const historyChatShadow = historyChatEl.shadowRoot;
-                                                                        if (!historyChatShadow) return console.error(
-                                                                            'shadowRoot do msn-messenger-history-chat é null');
-                                                                        const messageElement = historyChatShadow.getElementById(
-                                                                            `msg-${msg.id}`);
-
-                                                                        if (!historyIds.has(`msg-${msg.id}`)) {
+                                                                        if (!historyIds.has(msgId)) {
                                                                             const p = document.createElement('p');
-                                                                            p.id = `msg-${msg.id}`;
+                                                                            p.id = msgId;
 
                                                                             if (msg.text === "nudge") {
-                                                                                const isSelf = (msg.author === "Você");
-                                                                                if (!isSelf) nudge();
-                                                                                msg.text = isSelf ?
+                                                                                msg.text = (msg.author === "Você") ?
                                                                                     "<mark>Você alertou com um cutucão!</mark>" :
-                                                                                    "<mark>Você recebeu um cutucão!</mark>";
+                                                                                    (nudge(), "<mark>Você recebeu um cutucão!</mark>");
                                                                             }
 
                                                                             p.innerHTML =
                                                                                 `<b>${msg.author}<aside class="status ${msg.status}"></aside></b>: <span>${msg.text}</span>`;
                                                                             fragment.appendChild(p);
-                                                                            historyIds.add(`msg-${msg.id}`);
+                                                                            historyIds.add(msgId);
 
-                                                                            if (msg.author !== "Você" && msg.text !== "nudge") {
+                                                                            if (msg.author !== "Você" && msg.text !== "nudge")
                                                                                 newMessage();
-                                                                            }
-                                                                        } else {
-                                                                            if (messageElement) {
-                                                                                const statusEl = messageElement.querySelector(
-                                                                                    'aside.status');
-                                                                                if (statusEl) {
-                                                                                    statusEl.className = `status ${msg.status}`;
-                                                                                }
-                                                                            }
+                                                                        } else if (messageElement) {
+                                                                            const statusEl = messageElement.querySelector(
+                                                                                'aside.status');
+                                                                            if (statusEl) statusEl.className = `status ${msg.status}`;
                                                                         }
                                                                     });
 
