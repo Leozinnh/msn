@@ -13,7 +13,7 @@ class LogoutInactiveUsers extends Command
 
     public function handle()
     {
-        $limite = Carbon::now()->subMinutes(1);
+        $limite = Carbon::now()->subMinutes(3);
 
         $usuarios = User::where('keepAlive', '<', $limite)->get();
 
