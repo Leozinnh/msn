@@ -43,9 +43,15 @@
         <msn-messenger-window>
             <template shadowrootmode="open">
                 <style>
+                    @media screen and (min-width:1px) and (max-width: 600px) {
+                        .container {
+                            transform: scale(0.79) !important;
+                        }
+                    }
+
                     :host {
                         --width: 475px;
-                        --height: 350px;
+                        --height: 400px;
                         --border-radius: 6px;
                     }
 
