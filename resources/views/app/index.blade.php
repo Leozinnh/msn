@@ -687,11 +687,26 @@
                                                                 if (data.success) {
                                                                     const fragment = document.createDocumentFragment();
                                                                     data.messages.forEach(msg => {
-                                                                        const alreadyInHistory = historyIds.has(`msg-${msg.id}`);
-                                                                        const messageElement = document.getElementById(`msg-${msg.id}`);
+                                                                        const windowEl = document.querySelector('msn-messenger-window')
+                                                                            .shadowRoot;
+                                                                        const remoteUserEl = windowEl.querySelector(
+                                                                            'msn-messenger-remote-user');
+                                                                        if (!remoteUserEl) return console.error(
+                                                                            'msn-messenger-remote-user não encontrado');
 
-                                                                        if (!alreadyInHistory) {
-                                                                            // Mensagem nova (controle por ID)
+                                                                        const remoteUserShadow = remoteUserEl.shadowRoot;
+                                                                        const historyChatEl = remoteUserShadow.querySelector(
+                                                                            'msn-messenger-history-chat');
+                                                                        if (!historyChatEl) return console.error(
+                                                                            'msn-messenger-history-chat não encontrado');
+
+                                                                        const historyChatShadow = historyChatEl.shadowRoot;
+                                                                        if (!historyChatShadow) return console.error(
+                                                                            'shadowRoot do msn-messenger-history-chat é null');
+                                                                        const messageElement = historyChatShadow.getElementById(
+                                                                            `msg-${msg.id}`);
+
+                                                                        if (!historyIds.has(`msg-${msg.id}`)) {
                                                                             const p = document.createElement('p');
                                                                             p.id = `msg-${msg.id}`;
 
@@ -711,15 +726,17 @@
                                                                             if (msg.author !== "Você" && msg.text !== "nudge") {
                                                                                 newMessage();
                                                                             }
-
-                                                                        } else if (messageElement) {
-                                                                            const statusEl = messageElement.querySelector(
-                                                                                'aside.status');
-                                                                            if (statusEl && !statusEl.classList.contains(msg.status)) {
-                                                                                statusEl.className = `status ${msg.status}`;
+                                                                        } else {
+                                                                            if (messageElement) {
+                                                                                const statusEl = messageElement.querySelector(
+                                                                                    'aside.status');
+                                                                                if (statusEl) {
+                                                                                    statusEl.className = `status ${msg.status}`;
+                                                                                }
                                                                             }
                                                                         }
                                                                     });
+
 
 
 
