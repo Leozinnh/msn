@@ -1555,7 +1555,7 @@
 
         function keepAliveLoop() {
             sendKeepAlive();
-            setTimeout(keepAliveLoop, 10000);
+            setTimeout(keepAliveLoop, 15000);
         }
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
@@ -1563,7 +1563,6 @@
             }
         });
         keepAliveLoop();
-
 
         // $(function() {
         //     const windowWidth = $(window).width();
